@@ -1,0 +1,6 @@
+{
+  "name": "Método PAUSA",
+  "description": "Aprenda a dizer não com confiança e sem culpa.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
