@@ -64,6 +64,113 @@ const trackCustomPixel = (eventName: string, params?: Record<string, any>) => {
   }
 };
 
+// Auxiliar para anexar UTMs e parâmetros de rastreamento do UTMify de forma infalível
+const addUtmsToUrl = (url: string): string => {
+  if (!url) return url;
+  try {
+    const parsedUrl = new URL(url);
+    const searchParams = new URLSearchParams(parsedUrl.search);
+
+    // 1. Captura parâmetros diretamente da URL atual da página
+    if (typeof window !== "undefined" && window.location) {
+      const currentParams = new URLSearchParams(window.location.search);
+      currentParams.forEach((value, key) => {
+        searchParams.set(key, value);
+      });
+    }
+
+    // 2. Chaves de rastreamento do UTMify e afins
+    const utmKeys = [
+      "utm_source",
+      "utm_medium",
+      "utm_campaign",
+      "utm_content",
+      "utm_term",
+      "src",
+      "xcod",
+      "sck",
+      "subid",
+      "subid2",
+      "subid3",
+      "subid4",
+      "subid5"
+    ];
+
+    // 3. Captura parâmetros salvos no localStorage (pelo UTMify)
+    if (typeof window !== "undefined" && window.localStorage) {
+      try {
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (key) {
+            const lowerKey = key.toLowerCase();
+            if (
+              lowerKey.startsWith("utm_") || 
+              ["src", "xcod", "sck", "subid"].some(k => lowerKey.includes(k))
+            ) {
+              const val = localStorage.getItem(key);
+              if (val && typeof val === "string" && val.length < 500) {
+                searchParams.set(key, val);
+              }
+            }
+          }
+        }
+      } catch (e) {
+        // Ignora erros de localStorage
+      }
+    }
+
+    // 4. Captura parâmetros salvos no sessionStorage
+    if (typeof window !== "undefined" && window.sessionStorage) {
+      try {
+        for (let i = 0; i < sessionStorage.length; i++) {
+          const key = sessionStorage.key(i);
+          if (key) {
+            const lowerKey = key.toLowerCase();
+            if (
+              lowerKey.startsWith("utm_") || 
+              ["src", "xcod", "sck", "subid"].some(k => lowerKey.includes(k))
+            ) {
+              const val = sessionStorage.getItem(key);
+              if (val && typeof val === "string" && val.length < 500) {
+                searchParams.set(key, val);
+              }
+            }
+          }
+        }
+      } catch (e) {
+        // Ignora erros de sessionStorage
+      }
+    }
+
+    // 5. Captura parâmetros salvos em cookies (pelo UTMify)
+    if (typeof document !== "undefined" && document.cookie) {
+      try {
+        const cookies = document.cookie.split(";");
+        cookies.forEach((cookie) => {
+          const [name, val] = cookie.split("=").map((c) => c.trim());
+          if (name && val) {
+            const lowerName = name.toLowerCase();
+            if (
+              lowerName.startsWith("utm_") || 
+              ["src", "xcod", "sck", "subid"].some(k => lowerName.includes(k))
+            ) {
+              searchParams.set(name, decodeURIComponent(val));
+            }
+          }
+        });
+      } catch (e) {
+        // Ignora erros de cookies
+      }
+    }
+
+    parsedUrl.search = searchParams.toString();
+    return parsedUrl.toString();
+  } catch (err) {
+    console.error("Erro ao anexar UTMs ao URL:", err);
+    return url;
+  }
+};
+
 export default function App() {
   const [isUpsellOpen, setIsUpsellOpen] = useState(false);
   const [activeFaqIndex, setActiveFaqIndex] = useState<number | null>(null);
@@ -171,7 +278,7 @@ export default function App() {
       currency: "BRL"
     });
     trackCustomPixel("AcceptUpgrade", { price: 16.90 });
-    window.location.href = config.premiumUpsellCheckoutUrl;
+    window.location.href = addUtmsToUrl(config.premiumUpsellCheckoutUrl);
   };
 
   const handleDeclineUpgrade = () => {
@@ -181,7 +288,7 @@ export default function App() {
       currency: "BRL"
     });
     trackCustomPixel("DeclineUpgrade", { price: 9.90 });
-    window.location.href = config.basicCheckoutUrl;
+    window.location.href = addUtmsToUrl(config.basicCheckoutUrl);
   };
 
   const handleBuyPremiumDirectly = () => {
@@ -191,7 +298,7 @@ export default function App() {
       currency: "BRL"
     });
     trackCustomPixel("BuyPremiumDirect", { price: 19.90 });
-    window.location.href = config.premiumCheckoutUrl;
+    window.location.href = addUtmsToUrl(config.premiumCheckoutUrl);
   };
 
   const scrollToPlanos = () => {
