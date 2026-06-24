@@ -14,6 +14,7 @@ import {
   FileText,
   Maximize2
 } from "lucide-react";
+import SecureRedirects from "./components/SecureRedirects";
 
 // ============================================================================
 // CONFIGURAÇÃO EDITÁVEL
@@ -172,9 +173,38 @@ const addUtmsToUrl = (url: string): string => {
 };
 
 export default function App() {
+  const [sessionPage, setSessionPage] = useState<"landing" | "basic" | "premium" | "cancelled">("landing");
   const [isUpsellOpen, setIsUpsellOpen] = useState(false);
   const [activeFaqIndex, setActiveFaqIndex] = useState<number | null>(null);
   const [isPausaExpanded, setIsPausaExpanded] = useState(true);
+
+  // Monitora parâmetros de URL para redirecionamentos seguros
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const searchParams = new URLSearchParams(window.location.search);
+      const session = searchParams.get("session");
+      if (session === "success_basic" || session === "pay_bsc_883017") {
+        setSessionPage("basic");
+      } else if (session === "success_premium" || session === "pay_prm_994821") {
+        setSessionPage("premium");
+      } else if (session === "cancelled" || session === "fail_912" || session === "expired") {
+        setSessionPage("cancelled");
+      }
+    }
+  }, []);
+
+  const handleBackToPlans = () => {
+    setSessionPage("landing");
+    if (typeof window !== "undefined" && window.history) {
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+    setTimeout(() => {
+      const plansSection = document.getElementById("planos");
+      if (plansSection) {
+        plansSection.scrollIntoView({ behavior: "smooth" });
+      }
+    }, 100);
+  };
   
   // Refs para acessibilidade do Modal de Upsell (Focus trapping)
   const modalRef = useRef<HTMLDivElement>(null);
@@ -313,6 +343,15 @@ export default function App() {
     setActiveFaqIndex(activeFaqIndex === index ? null : index);
     trackCustomPixel("FaqToggled", { questionIndex: index, state: activeFaqIndex === index ? "closed" : "opened" });
   };
+
+  if (sessionPage !== "landing") {
+    return (
+      <SecureRedirects 
+        type={sessionPage} 
+        onBackToPlans={handleBackToPlans} 
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col font-sans bg-sand text-navy selection:bg-burnt selection:text-white">
