@@ -321,6 +321,16 @@ export default function App() {
     window.location.href = addUtmsToUrl(config.basicCheckoutUrl);
   };
 
+  const handleBuyBasicDirectly = () => {
+    trackPixel("InitiateCheckout", {
+      content_name: "Guia Essencial (Direto)",
+      value: 9.90,
+      currency: "BRL"
+    });
+    trackCustomPixel("BuyBasicDirect", { price: 9.90 });
+    window.location.href = addUtmsToUrl(config.basicCheckoutUrl);
+  };
+
   const handleBuyPremiumDirectly = () => {
     trackPixel("InitiateCheckout", {
       content_name: "Plano Completo (Direto)",
@@ -390,6 +400,8 @@ export default function App() {
                 alt="Banner Método PAUSA" 
                 className="w-full h-auto aspect-[16/7] min-[390px]:max-h-[165px] object-cover"
                 id="hero-image-mobile"
+                loading="eager"
+                fetchPriority="high"
               />
             </div>
           </div>
@@ -433,6 +445,8 @@ export default function App() {
               alt="Método PAUSA Banner" 
               className="w-full h-auto object-cover aspect-[4/3] md:aspect-auto"
               id="hero-image-desktop"
+              loading="eager"
+              fetchPriority="high"
             />
           </div>
         </div>
@@ -867,7 +881,8 @@ export default function App() {
             <div className="space-y-4">
               <button
                 ref={triggerButtonRef}
-                onClick={() => openUpsell(triggerButtonRef)}
+                /* Para reativar o Upsell de R$ 16,90 no futuro, altere a linha abaixo de volta para: onClick={() => openUpsell(triggerButtonRef)} */
+                onClick={handleBuyBasicDirectly}
                 className="w-full bg-navy text-cream font-display font-bold text-[13px] min-[390px]:text-sm md:text-base tracking-wider uppercase py-4 px-6 rounded-lg hover:bg-navy/95 active:scale-[0.98] transition-all duration-150 min-h-[52px] shadow-sm flex items-center justify-center gap-2 cursor-pointer"
               >
                 Quero o Guia Essencial
