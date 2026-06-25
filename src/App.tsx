@@ -193,10 +193,19 @@ export default function App() {
 
     const handleScroll = () => {
       const target = document.getElementById("o-que-voce-recebe");
+      const planosTarget = document.getElementById("planos");
       if (target) {
         const rect = target.getBoundingClientRect();
-        // Exibe a barra se o topo do conteúdo já entrou ou passou da tela
-        if (rect.top <= window.innerHeight - 100) {
+        const hasPassedStart = rect.top <= window.innerHeight - 100;
+
+        let hasReachedPlanos = false;
+        if (planosTarget) {
+          const planosRect = planosTarget.getBoundingClientRect();
+          // Esconde a barra flutuante se a seção de planos estiver visível ou o usuário já passou dela
+          hasReachedPlanos = planosRect.top <= window.innerHeight - 50;
+        }
+
+        if (hasPassedStart && !hasReachedPlanos) {
           setShowFloatingBar(true);
         } else {
           setShowFloatingBar(false);
