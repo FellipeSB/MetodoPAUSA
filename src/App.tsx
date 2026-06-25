@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, RefObject } from "react";
+import { useState, useEffect, useRef, RefObject, lazy, Suspense } from "react";
 import { 
   Check, 
   Shield, 
@@ -14,7 +14,9 @@ import {
   FileText,
   Maximize2
 } from "lucide-react";
-import SecureRedirects from "./components/SecureRedirects";
+
+// Carregamento Preguiçoso (Lazy Loading) do SecureRedirects para otimizar o tamanho do bundle inicial do site
+const SecureRedirects = lazy(() => import("./components/SecureRedirects"));
 
 // ============================================================================
 // CONFIGURAÇÃO EDITÁVEL
@@ -356,10 +358,16 @@ export default function App() {
 
   if (sessionPage !== "landing") {
     return (
-      <SecureRedirects 
-        type={sessionPage} 
-        onBackToPlans={handleBackToPlans} 
-      />
+      <Suspense fallback={
+        <div className="min-h-screen bg-sand flex flex-col items-center justify-center p-4 font-sans select-none text-navy">
+          <div className="text-sm font-semibold uppercase tracking-wider animate-pulse">Carregando página de segurança...</div>
+        </div>
+      }>
+        <SecureRedirects 
+          type={sessionPage} 
+          onBackToPlans={handleBackToPlans} 
+        />
+      </Suspense>
     );
   }
 
@@ -402,6 +410,8 @@ export default function App() {
                 id="hero-image-mobile"
                 loading="eager"
                 fetchPriority="high"
+                width="450"
+                height="197"
               />
             </div>
           </div>
@@ -447,6 +457,8 @@ export default function App() {
               id="hero-image-desktop"
               loading="eager"
               fetchPriority="high"
+              width="512"
+              height="384"
             />
           </div>
         </div>
@@ -505,6 +517,8 @@ export default function App() {
                         className="w-full h-auto object-cover aspect-[9/16]" 
                         loading="lazy"
                         referrerPolicy="no-referrer"
+                        width="270"
+                        height="480"
                       />
                     </div>
                   </div>
@@ -709,6 +723,8 @@ export default function App() {
                     className="w-full h-auto block transition-transform duration-300 group-hover:scale-[1.02]" 
                     loading="lazy"
                     referrerPolicy="no-referrer"
+                    width="464"
+                    height="261"
                   />
                 </div>
                 <div className="p-5 md:p-6 space-y-2">
@@ -735,6 +751,8 @@ export default function App() {
                     className="w-full h-auto block transition-transform duration-300 group-hover:scale-[1.02]" 
                     loading="lazy"
                     referrerPolicy="no-referrer"
+                    width="464"
+                    height="261"
                   />
                 </div>
                 <div className="p-5 md:p-6 space-y-2">
@@ -761,6 +779,8 @@ export default function App() {
                     className="w-full h-auto block transition-transform duration-300 group-hover:scale-[1.02]" 
                     loading="lazy"
                     referrerPolicy="no-referrer"
+                    width="464"
+                    height="261"
                   />
                 </div>
                 <div className="p-5 md:p-6 space-y-2">
@@ -787,6 +807,8 @@ export default function App() {
                     className="w-full h-auto block transition-transform duration-300 group-hover:scale-[1.02]" 
                     loading="lazy"
                     referrerPolicy="no-referrer"
+                    width="464"
+                    height="261"
                   />
                 </div>
                 <div className="p-5 md:p-6 space-y-2">
