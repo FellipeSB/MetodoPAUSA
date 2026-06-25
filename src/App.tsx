@@ -4,6 +4,8 @@ import {
   Shield, 
   ChevronDown, 
   ChevronUp, 
+  ChevronLeft,
+  ChevronRight,
   X, 
   BookOpen, 
   Calendar, 
@@ -179,6 +181,64 @@ export default function App() {
   const [isUpsellOpen, setIsUpsellOpen] = useState(false);
   const [activeFaqIndex, setActiveFaqIndex] = useState<number | null>(null);
   const [isPausaExpanded, setIsPausaExpanded] = useState(true);
+
+  // Estados e Refs adicionais para Carrossel, Zoom de Imagem e Barra Flutuante de Compra
+  const [showFloatingBar, setShowFloatingBar] = useState(false);
+  const [zoomedImage, setZoomedImage] = useState<string | null>(null);
+  const carouselRef = useRef<HTMLDivElement>(null);
+
+  // Monitora rolagem para exibir barra flutuante após alcançar a seção "O que você vai receber"
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const handleScroll = () => {
+      const target = document.getElementById("o-que-voce-recebe");
+      if (target) {
+        const rect = target.getBoundingClientRect();
+        // Exibe a barra se o topo do conteúdo já entrou ou passou da tela
+        if (rect.top <= window.innerHeight - 100) {
+          setShowFloatingBar(true);
+        } else {
+          setShowFloatingBar(false);
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    handleScroll(); // Execução inicial
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  const scrollToHistorias = () => {
+    const historiasSection = document.getElementById("historias");
+    if (historiasSection) {
+      historiasSection.scrollIntoView({ behavior: "smooth" });
+      trackCustomPixel("HeroCtaClicked", { target: "historias" });
+    }
+  };
+
+  const scrollToOQueVoceRecebe = () => {
+    const targetSection = document.getElementById("o-que-voce-recebe");
+    if (targetSection) {
+      targetSection.scrollIntoView({ behavior: "smooth" });
+      setShowFloatingBar(true);
+      trackCustomPixel("CtaToReceiveClicked", { target: "o-que-voce-recebe" });
+    }
+  };
+
+  const scrollCarousel = (direction: "left" | "right") => {
+    if (carouselRef.current) {
+      const scrollAmount = window.innerWidth < 768 ? 260 : 340;
+      carouselRef.current.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth"
+      });
+      trackCustomPixel("CarouselScrolled", { direction });
+    }
+  };
 
   // Monitora parâmetros de URL para redirecionamentos seguros
   useEffect(() => {
@@ -418,11 +478,11 @@ export default function App() {
 
           <div className="w-full flex flex-col space-y-3 pt-1 md:pt-4 max-w-md">
             <button
-              onClick={scrollToPlanos}
+              onClick={scrollToHistorias}
               id="cta-hero-primary"
               className="w-full bg-burnt text-white font-display font-bold text-[13px] min-[390px]:text-sm md:text-base tracking-wider uppercase py-4 px-6 rounded-lg hover:bg-burnt/95 active:scale-[0.98] transition-all duration-150 min-h-[52px] shadow-sm flex items-center justify-center gap-2 cursor-pointer"
             >
-              Quero aprender a dizer não
+              VEJA COMO COMEÇAR A DIZER “NÃO” SEM CULPA
             </button>
 
             {/* Badges de Confiança */}
@@ -466,71 +526,102 @@ export default function App() {
       </header>
 
       {/* ──────────────────────────────────────────────────────── */}
-      {/* 2. PROVA SOCIAL / DEPOIMENTOS */}
+      {/* 2. PROVA SOCIAL / SITUAÇÕES DO DIA A DIA */}
       {/* ──────────────────────────────────────────────────────── */}
-      <section className="w-full bg-cream py-12 md:py-20 border-y border-soft-border/50">
+      <section id="historias" className="w-full bg-cream py-12 md:py-20 border-y border-soft-border/50 scroll-mt-6">
         <div className="max-w-7xl mx-auto px-4">
           
           <div className="text-center max-w-3xl mx-auto mb-10 md:mb-16">
-            <span className="text-[11px] font-bold uppercase tracking-widest text-burnt">
-              Histórias de Mudança
+            <span className="text-[11px] font-bold uppercase tracking-widest text-burnt bg-burnt/10 px-3 py-1 rounded-full">
+              SITUAÇÕES DO DIA A DIA
             </span>
-            <h2 className="text-xl min-[390px]:text-2xl md:text-4xl font-display font-bold text-navy mt-2 leading-tight">
-              Veja o que estão dizendo depois de começar a se posicionar.
+            <h2 className="text-xl min-[390px]:text-2xl md:text-4xl font-display font-bold text-navy mt-4 leading-tight">
+              VEJA COMO O MÉTODO PAUSA PODE SER APLICADO NA VIDA REAL
             </h2>
             <p className="text-xs min-[390px]:text-sm md:text-base text-slate-text mt-3">
-              Mensagens reais de pessoas que decidiram parar de se abandonar para agradar os outros.
+              Pequenos limites podem mudar a forma como você trabalha, descansa e se posiciona.
             </p>
           </div>
 
-          {/* Continuous Infinite Loop Marquee (For all devices) */}
-          <div className="relative w-full overflow-hidden py-4">
-            {/* Soft fade-out gradients on left/right edges for a highly premium look */}
-            <div className="absolute left-0 top-0 bottom-0 w-8 md:w-32 bg-gradient-to-r from-cream via-cream/80 to-transparent z-10 pointer-events-none" />
-            <div className="absolute right-0 top-0 bottom-0 w-8 md:w-32 bg-gradient-to-l from-cream via-cream/80 to-transparent z-10 pointer-events-none" />
+          {/* Elegant Horizontal Carousel */}
+          <div className="relative max-w-5xl mx-auto px-1 md:px-4 group/carousel">
             
-            <div className="flex w-full overflow-hidden">
-              <div className="animate-marquee flex gap-4 md:gap-6 py-2">
-                {[
-                  { img: config.assets.testimonialWhatsapp1, alt: "Mensagem Real Whatsapp 1" },
-                  { img: config.assets.testimonialWhatsapp2, alt: "Mensagem Real Whatsapp 2" },
-                  { img: config.assets.testimonialWhatsapp3, alt: "Mensagem Real Whatsapp 3" },
-                  { img: config.assets.testimonialDirect1, alt: "Mensagem Real Direct 1" },
-                  { img: config.assets.testimonialDirect2, alt: "Mensagem Real Direct 2" },
-                  { img: config.assets.testimonialWhatsapp1, alt: "Mensagem Real Whatsapp 1 - loop" },
-                  { img: config.assets.testimonialWhatsapp2, alt: "Mensagem Real Whatsapp 2 - loop" },
-                  { img: config.assets.testimonialWhatsapp3, alt: "Mensagem Real Whatsapp 3 - loop" },
-                  { img: config.assets.testimonialDirect1, alt: "Mensagem Real Direct 1 - loop" },
-                  { img: config.assets.testimonialDirect2, alt: "Mensagem Real Direct 2 - loop" },
-                ].map((item, idx) => (
+            {/* Left Control Arrow (Desktop only) */}
+            <button
+              onClick={() => scrollCarousel("left")}
+              className="hidden md:flex absolute -left-12 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-cream hover:bg-sand border border-soft-border/60 shadow-sm items-center justify-center text-navy hover:text-burnt active:scale-95 transition-all cursor-pointer z-20"
+              aria-label="Anterior"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+
+            {/* Carousel Container */}
+            <div 
+              ref={carouselRef}
+              className="w-full overflow-x-auto flex gap-4 md:gap-6 snap-x snap-mandatory pb-5 scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none]"
+              style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            >
+              {[
+                "https://i.ibb.co/cXgsQ863/Chat-GPT-Image-25-de-jun-de-2026-08-05-45-1.webp",
+                "https://i.ibb.co/Sw1pmT9M/Chat-GPT-Image-25-de-jun-de-2026-08-05-45-2.webp",
+                "https://i.ibb.co/jvRVP0sR/Chat-GPT-Image-25-de-jun-de-2026-08-05-45-3.webp",
+                "https://i.ibb.co/hJpJYyBt/Chat-GPT-Image-25-de-jun-de-2026-08-05-46-4.webp",
+                "https://i.ibb.co/vCyHYDWg/Chat-GPT-Image-25-de-jun-de-2026-08-05-46-5.webp",
+                "https://i.ibb.co/Kx9WdzJg/Chat-GPT-Image-25-de-jun-de-2026-08-05-47-6.webp"
+              ].map((imgUrl, idx) => (
+                <div 
+                  key={idx} 
+                  className="w-[230px] min-[390px]:w-[265px] md:w-[285px] shrink-0 snap-start"
+                >
                   <div 
-                    key={idx} 
-                    className="w-[230px] min-[390px]:w-[270px] md:w-[290px] shrink-0 bg-sand/30 border border-soft-border/70 rounded-xl p-3 md:p-4 flex flex-col justify-between hover:shadow-md transition-shadow duration-200"
+                    onClick={() => setZoomedImage(imgUrl)}
+                    className="relative aspect-[9/16] rounded-xl overflow-hidden border border-soft-border/60 bg-white shadow-sm hover:shadow-md hover:border-burnt/30 transition-all duration-300 cursor-zoom-in group/card"
                   >
-                    <div className="text-[9px] md:text-[10px] font-bold text-burnt uppercase tracking-wider mb-2 md:mb-3">
-                      Depoimento Real
-                    </div>
-                    <div className="w-full overflow-hidden rounded-lg border border-soft-border/60 bg-white shadow-sm">
-                      <img 
-                        src={item.img} 
-                        alt={item.alt} 
-                        className="w-full h-auto object-cover aspect-[9/16]" 
-                        loading="lazy"
-                        referrerPolicy="no-referrer"
-                        width="270"
-                        height="480"
-                      />
+                    <img 
+                      src={imgUrl} 
+                      alt={`Situação Real de Conversa ${idx + 1}`} 
+                      className="w-full h-full object-cover pointer-events-none select-none transition-transform duration-300 group-hover/card:scale-[1.015]" 
+                      loading="lazy"
+                      referrerPolicy="no-referrer"
+                      width="285"
+                      height="506"
+                    />
+                    
+                    {/* Hover Overlay with expand icon */}
+                    <div className="absolute inset-0 bg-navy/10 opacity-0 group-hover/card:opacity-100 transition-opacity flex items-center justify-center">
+                      <div className="bg-cream/95 backdrop-blur-xs px-3.5 py-2 rounded-lg border border-soft-border/60 shadow-sm text-[10px] min-[390px]:text-xs font-bold text-navy uppercase tracking-wider flex items-center gap-1.5 transform translate-y-2 group-hover/card:translate-y-0 transition-transform duration-200">
+                        <Maximize2 className="w-3.5 h-3.5 text-burnt" /> Ampliar Conversa
+                      </div>
                     </div>
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
+
+            {/* Right Control Arrow (Desktop only) */}
+            <button
+              onClick={() => scrollCarousel("right")}
+              className="hidden md:flex absolute -right-12 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-cream hover:bg-sand border border-soft-border/60 shadow-sm items-center justify-center text-navy hover:text-burnt active:scale-95 transition-all cursor-pointer z-20"
+              aria-label="Próximo"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
           </div>
 
-          <div className="text-center mt-10 md:mt-16 pt-6 border-t border-soft-border/30">
-            <span className="font-serif italic text-navy/95 text-base min-[390px]:text-lg md:text-xl font-medium tracking-tight">
-              “Dizer não não muda quem você é. Muda o quanto você se abandona.”
-            </span>
+          {/* Swipe indicator for mobile */}
+          <p className="text-center text-[11px] text-slate-text/75 italic mt-3 md:hidden">
+            Arraste para o lado para ver mais conversas
+          </p>
+
+          {/* CTA Button with Smooth Scroll Below Carousel */}
+          <div className="text-center mt-10 md:mt-12 flex flex-col items-center">
+            <button
+              onClick={scrollToOQueVoceRecebe}
+              className="bg-burnt text-white font-display font-bold text-[12px] min-[390px]:text-[13px] md:text-sm tracking-wider uppercase py-4 px-8 rounded-lg hover:bg-burnt/95 active:scale-[0.98] transition-all duration-150 shadow-md flex items-center gap-2 cursor-pointer"
+            >
+              VEJA O QUE VOCÊ VAI RECEBER
+              <ChevronDown className="w-4 h-4 text-cream shrink-0" />
+            </button>
           </div>
 
         </div>
@@ -539,17 +630,17 @@ export default function App() {
       {/* ──────────────────────────────────────────────────────── */}
       {/* 3. DETALHES DO PRODUTO / O QUE VOCÊ RECEBE */}
       {/* ──────────────────────────────────────────────────────── */}
-      <section className="w-full py-16 md:py-24 max-w-7xl mx-auto px-4">
+      <section id="o-que-voce-recebe" className="w-full py-16 md:py-24 max-w-7xl mx-auto px-4 scroll-mt-6">
         
         <div className="text-center max-w-3xl mx-auto mb-12 md:mb-16">
-          <span className="text-[11px] font-bold uppercase tracking-widest text-burnt">
-            Estrutura Completa
+          <span className="text-[11px] font-bold uppercase tracking-widest text-burnt bg-burnt/10 px-3 py-1 rounded-full">
+            MÉTODO COMPLETO
           </span>
-          <h2 className="text-xl min-[390px]:text-2xl md:text-4xl font-display font-bold text-navy mt-2 leading-tight">
-            Tudo o que você recebe para começar a se posicionar.
+          <h2 className="text-xl min-[390px]:text-2xl md:text-4xl font-display font-bold text-navy mt-4 leading-tight">
+            O QUE É O MÉTODO PAUSA?
           </h2>
-          <p className="text-xs min-[390px]:text-sm md:text-base text-slate-text mt-3">
-            Não é só teoria. É um guia prático para usar quando alguém pedir algo que você não quer ou não pode aceitar.
+          <p className="text-xs min-[390px]:text-sm md:text-base text-slate-text mt-4 max-w-2xl mx-auto font-medium">
+            Um guia prático para criar espaço entre o pedido de alguém e a sua resposta — sem brigar, sem se explicar demais e sem se abandonar por culpa.
           </p>
         </div>
 
@@ -839,6 +930,7 @@ export default function App() {
       {/* ──────────────────────────────────────────────────────── */}
       {/* 5. OFERTA E PLANOS DE PREÇO */}
       {/* ──────────────────────────────────────────────────────── */}
+      <div id="oferta" className="scroll-mt-6"></div>
       <section id="planos" className="w-full py-16 md:py-24 max-w-7xl mx-auto px-4 scroll-mt-6">
         
         <div className="text-center max-w-3xl mx-auto mb-12 md:mb-16">
@@ -1354,6 +1446,78 @@ export default function App() {
               </button>
             </div>
 
+          </div>
+        </div>
+      )}
+
+      {/* BARRA FIXA FLUTUANTE DE COMPRA */}
+      {showFloatingBar && (
+        <div 
+          className="fixed bottom-4 left-0 right-0 z-40 px-3 md:px-4 flex justify-center pointer-events-none"
+          id="floating-purchase-bar"
+        >
+          <div className="w-full max-w-4xl bg-navy text-cream rounded-xl border border-cream/10 shadow-xl p-3 md:p-4 flex flex-col md:flex-row items-center justify-between gap-3 pointer-events-auto">
+            {/* Esquerda / Topo */}
+            <div className="flex items-center gap-2.5 text-center md:text-left">
+              <div className="hidden md:flex w-8 h-8 rounded-full bg-burnt/10 border border-burnt/15 items-center justify-center text-burnt">
+                <Check className="w-4 h-4" />
+              </div>
+              <div>
+                <div className="text-[10px] md:text-xs font-bold tracking-widest uppercase text-burnt">
+                  Método PAUSA • Acesso imediato
+                </div>
+                <div className="hidden md:block text-[11px] text-cream/70">
+                  Guia Prático Essencial + Bônus Disponíveis
+                </div>
+              </div>
+            </div>
+
+            {/* Direita / Botão */}
+            <div className="w-full md:w-auto flex items-center gap-3">
+              <div className="hidden lg:flex flex-col text-right">
+                <span className="text-[10px] text-cream/60 line-through">De R$ 47,00</span>
+                <span className="text-sm font-bold text-white">Por apenas R$ 9,90</span>
+              </div>
+              <button
+                onClick={() => {
+                  const ofertaSection = document.getElementById("planos");
+                  if (ofertaSection) {
+                    ofertaSection.scrollIntoView({ behavior: "smooth" });
+                  }
+                  trackCustomPixel("FloatingCtaClicked", { price: 9.90 });
+                }}
+                className="w-full md:w-auto bg-burnt text-white font-display font-bold text-xs tracking-wider uppercase py-3 px-6 rounded-lg hover:bg-burnt/95 active:scale-95 transition-all shadow-md flex items-center justify-center gap-1.5 cursor-pointer min-h-[44px]"
+              >
+                QUERO COMEÇAR POR R$9,90
+                <ChevronRight className="w-4 h-4 text-white shrink-0" />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL DE AMPLIAR IMAGEM (WHATSAPP CHATS) */}
+      {zoomedImage && (
+        <div 
+          className="fixed inset-0 bg-navy/85 backdrop-blur-xs z-50 flex items-center justify-center p-4 cursor-zoom-out"
+          onClick={() => setZoomedImage(null)}
+        >
+          <div className="relative max-w-sm w-full max-h-[90vh] flex flex-col items-center">
+            <button 
+              onClick={() => setZoomedImage(null)}
+              className="absolute -top-12 right-0 text-cream hover:text-white font-bold bg-navy/50 w-10 h-10 rounded-full flex items-center justify-center text-lg border border-cream/10 active:scale-95 transition-transform"
+            >
+              ✕
+            </button>
+            <img 
+              src={zoomedImage} 
+              alt="Conversa ampliada" 
+              className="max-h-[80vh] w-auto rounded-xl object-contain border border-cream/20 shadow-2xl cursor-default"
+              onClick={(e) => e.stopPropagation()}
+            />
+            <p className="text-cream/80 text-xs mt-3 text-center tracking-wide">
+              Clique em qualquer lugar fora para fechar
+            </p>
           </div>
         </div>
       )}
