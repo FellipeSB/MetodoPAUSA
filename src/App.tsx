@@ -221,11 +221,11 @@ export default function App() {
     };
   }, []);
 
-  const scrollToHistorias = () => {
-    const historiasSection = document.getElementById("historias");
-    if (historiasSection) {
-      historiasSection.scrollIntoView({ behavior: "smooth" });
-      trackCustomPixel("HeroCtaClicked", { target: "historias" });
+  const scrollToMetodoPausa = () => {
+    const targetSection = document.getElementById("metodo-pausa");
+    if (targetSection) {
+      targetSection.scrollIntoView({ behavior: "smooth" });
+      trackCustomPixel("CtaToMetodoPausaClicked", { target: "metodo-pausa" });
     }
   };
 
@@ -445,53 +445,52 @@ export default function App() {
       
       {/* ──────────────────────────────────────────────────────── */}
       {/* BARRA SUPERIOR — FINÍSSIMA */}
-      {/* ──────────────────────────────────────────────────────── */}
-      <div className="w-full bg-navy text-cream text-[10px] min-[390px]:text-xs tracking-widest font-semibold py-2.5 px-4 text-center select-none uppercase">
-        ACESSO IMEDIATO • PAGAMENTO ÚNICO • GARANTIA DE 7 DIAS
-      </div>
-
-      {/* ──────────────────────────────────────────────────────── */}
+      {/* ─────────────────────────────────────────────────      {/* ──────────────────────────────────────────────────────── */}
       {/* 1. HERO — PRIMEIRA DOBRA */}
       {/* ──────────────────────────────────────────────────────── */}
       <header className="relative w-full max-w-7xl mx-auto px-4 py-6 min-[390px]:py-8 md:py-16 grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center">
         
         {/* Lado esquerdo (Desktop) ou Topo (Mobile) */}
-        <div className="md:col-span-7 flex flex-col items-start text-left space-y-4 min-[390px]:space-y-5">
+        <div className="md:col-span-7 flex flex-col items-start text-left space-y-4">
           <div className="inline-flex items-center px-3 py-1 rounded-full bg-burnt/10 border border-burnt/15 text-burnt text-[11px] min-[390px]:text-xs font-bold tracking-widest uppercase">
-            Método PAUSA
+            MÉTODO PAUSA • GUIA DIGITAL
           </div>
           
-          <h1 className="text-xl min-[360px]:text-[1.35rem] min-[390px]:text-[1.65rem] min-[430px]:text-[1.85rem] md:text-4xl lg:text-5xl font-display font-bold text-navy leading-tight tracking-tight">
-            Você já perdeu 6 meses dizendo <span className="text-burnt">“sim”</span> para não decepcionar os outros. Vai perder os próximos 6 <span className="text-burnt">se abandonando</span> também?
+          <h1 className="text-xl min-[360px]:text-[1.35rem] min-[390px]:text-[1.65rem] min-[430px]:text-[1.85rem] md:text-4xl lg:text-5xl font-display font-bold text-navy leading-tight tracking-tight uppercase">
+            APRENDA A DIZER <span className="text-burnt">“NÃO”</span> SEM <span className="text-burnt">CULPA</span> — E SEM <span className="text-burnt">SE ABANDONAR</span>.
           </h1>
+
+          <p className="text-sm min-[390px]:text-base md:text-lg text-navy font-bold leading-tight font-sans mt-3 md:mt-4">
+            Pronto para aplicar ainda hoje.
+          </p>
           
-          <p className="text-xs min-[390px]:text-sm md:text-base text-slate-text leading-relaxed font-sans font-normal max-w-2xl">
-            Um guia direto para recusar pedidos, impor limites e parar de se colocar por último — sem brigar, sem se explicar demais e sem voltar atrás por culpa. <strong className="text-burnt font-semibold underline decoration-burnt/25 underline-offset-4">Uma mudança real com técnicas práticas que você pode começar a aplicar ainda hoje!</strong>
+          <p className="text-[11px] min-[390px]:text-xs md:text-[13px] lg:text-sm text-slate-text/90 leading-relaxed font-sans font-normal max-w-xl mt-1 md:mt-2">
+            Frases prontas, exercícios práticos e um método simples para você se posicionar sem brigar, sem se explicar demais e sem voltar atrás por culpa.
           </p>
 
-          {/* Versão Mobile: Imagem da Hero inserida exatamente após a Subheadline, garantindo que apareça na primeira dobra de 390x844px */}
-          <div className="block md:hidden w-full">
-            <div className="overflow-hidden rounded-xl border border-soft-border/60 bg-cream shadow-sm max-w-md mx-auto">
+          {/* Versão Mobile: Imagem da Hero de produto premium inserida abaixo do texto no mobile com aumento de ~10% */}
+          <div className="block md:hidden w-full mt-5 mb-2 px-1">
+            <div className="overflow-hidden rounded-xl border border-soft-border/60 bg-cream shadow-sm max-w-md mx-auto transform scale-[1.08] transition-transform duration-300">
               <img 
-                src={config.assets.hero} 
-                alt="Banner Método PAUSA" 
-                className="w-full h-auto aspect-[16/7] min-[390px]:max-h-[165px] object-cover"
+                src="https://i.ibb.co/yBXf95ND/Banner-Hero.webp" 
+                alt="Mockup do Método PAUSA" 
+                className="w-full h-auto object-cover"
                 id="hero-image-mobile"
                 loading="eager"
                 fetchPriority="high"
                 width="450"
-                height="197"
+                height="337"
               />
             </div>
           </div>
 
-          <div className="w-full flex flex-col space-y-3 pt-1 md:pt-4 max-w-md">
+          <div className="w-full flex flex-col space-y-3 pt-2 md:pt-4 max-w-md">
             <button
-              onClick={scrollToHistorias}
+              onClick={scrollToOQueVoceRecebe}
               id="cta-hero-primary"
               className="w-full bg-burnt text-white font-display font-bold text-[13px] min-[390px]:text-sm md:text-base tracking-wider uppercase py-4 px-6 rounded-lg hover:bg-burnt/95 active:scale-[0.98] transition-all duration-150 min-h-[52px] shadow-sm flex items-center justify-center gap-2 cursor-pointer"
             >
-              VEJA COMO COMEÇAR A DIZER “NÃO” SEM CULPA
+              QUERO VER O QUE VOU RECEBER
             </button>
 
             {/* Badges de Confiança */}
@@ -509,20 +508,16 @@ export default function App() {
                 Garantia de 7 dias
               </span>
             </div>
-
-            <p className="text-[10px] min-[390px]:text-xs text-center md:text-left text-slate-text/90 italic leading-snug pt-1">
-              Você não precisa se tornar uma pessoa fria. Só precisa parar de se abandonar para agradar os outros.
-            </p>
           </div>
         </div>
 
-        {/* Lado direito (Desktop) — Oculto no Mobile porque a imagem é injetada na hierarquia acima */}
-        <div className="hidden md:block md:col-span-5">
-          <div className="overflow-hidden rounded-xl border border-soft-border/60 bg-cream shadow-md transition-transform duration-300 hover:scale-[1.01]">
+        {/* Lado direito (Desktop) — Mockup Premium com aumento de ~10% */}
+        <div className="hidden md:block md:col-span-5 pl-4">
+          <div className="overflow-hidden rounded-xl border border-soft-border/60 bg-cream shadow-md transform scale-[1.1] transition-transform hover:scale-[1.12] duration-300">
             <img 
-              src={config.assets.hero} 
-              alt="Método PAUSA Banner" 
-              className="w-full h-auto object-cover aspect-[4/3] md:aspect-auto"
+              src="https://i.ibb.co/yBXf95ND/Banner-Hero.webp" 
+              alt="Método PAUSA Mockup Premium" 
+              className="w-full h-auto object-cover"
               id="hero-image-desktop"
               loading="eager"
               fetchPriority="high"
@@ -535,101 +530,114 @@ export default function App() {
       </header>
 
       {/* ──────────────────────────────────────────────────────── */}
-      {/* 2. PROVA SOCIAL / SITUAÇÕES DO DIA A DIA */}
+      {/* 2. IDENTIFICAÇÃO DE DOR — CHECKLIST EDITORIAL */}
       {/* ──────────────────────────────────────────────────────── */}
-      <section id="historias" className="w-full bg-cream py-12 md:py-20 border-y border-soft-border/50 scroll-mt-6">
-        <div className="max-w-7xl mx-auto px-4">
+      <section id="identificacao-dor" className="w-full bg-cream py-16 md:py-24 border-y border-soft-border/50 scroll-mt-6">
+        <div className="max-w-3xl mx-auto px-4">
           
-          <div className="text-center max-w-3xl mx-auto mb-10 md:mb-16">
-            <span className="text-[11px] font-bold uppercase tracking-widest text-burnt bg-burnt/10 px-3 py-1 rounded-full">
-              SITUAÇÕES DO DIA A DIA
+          <div className="text-center mb-10 md:mb-14">
+            <span className="text-[11px] font-bold uppercase tracking-widest text-burnt bg-burnt/10 px-3.5 py-1.5 rounded-full">
+              TALVEZ VOCÊ SE IDENTIFIQUE
             </span>
             <h2 className="text-xl min-[390px]:text-2xl md:text-4xl font-display font-bold text-navy mt-4 leading-tight">
-              VEJA COMO O MÉTODO PAUSA PODE SER APLICADO NA VIDA REAL
+              ESTE MATERIAL É PARA VOCÊ QUE:
             </h2>
-            <p className="text-xs min-[390px]:text-sm md:text-base text-slate-text mt-3">
-              Pequenos limites podem mudar a forma como você trabalha, descansa e se posiciona.
+          </div>
+
+          {/* Checklist Editorial Premium */}
+          <div className="bg-sand/35 rounded-2xl border border-soft-border/80 p-6 md:p-10 space-y-5 md:space-y-6 shadow-sm">
+            {[
+              "Sente culpa ao dizer não.",
+              "Aceita pedidos mesmo quando já está sobrecarregada.",
+              "Fica pensando por horas no que deveria ter respondido.",
+              "Tem medo de parecer grossa, egoísta ou ingrata.",
+              "Se explica demais para justificar uma decisão.",
+              "Se coloca por último para evitar decepcionar alguém.",
+              "Quer se posicionar sem brigar e sem perder a paz."
+            ].map((item, idx) => (
+              <div key={idx} className="flex items-start gap-3.5 md:gap-4 group">
+                <div className="w-6 h-6 rounded-full bg-burnt/10 text-burnt border border-burnt/15 flex items-center justify-center shrink-0 mt-0.5 group-hover:bg-burnt group-hover:text-white transition-all duration-300">
+                  <Check className="w-3.5 h-3.5 shrink-0" />
+                </div>
+                <p className="text-sm md:text-base text-navy font-medium leading-relaxed">
+                  {item}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          {/* Frase de Efeito Editorial */}
+          <div className="text-center mt-10 md:mt-12 space-y-6">
+            <p className="text-base md:text-xl font-serif italic text-burnt font-semibold">
+              “Você não precisa aprender a ser dura. Precisa aprender a ser clara.”
+            </p>
+
+            <div className="flex flex-col items-center">
+              <button
+                onClick={scrollToMetodoPausa}
+                className="w-full max-w-md bg-burnt text-white font-display font-bold text-[13px] min-[390px]:text-sm md:text-base tracking-wider uppercase py-4 px-8 rounded-lg hover:bg-burnt/95 active:scale-[0.98] transition-all duration-150 shadow-md flex items-center justify-center gap-2 cursor-pointer"
+              >
+                QUERO APRENDER A ME POSICIONAR
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* ──────────────────────────────────────────────────────── */}
+      {/* 3. SEÇÃO "O QUE É O MÉTODO PAUSA?" */}
+      {/* ──────────────────────────────────────────────────────── */}
+      <section id="metodo-pausa" className="w-full bg-sand/30 py-16 md:py-24 border-b border-soft-border/50 scroll-mt-6">
+        <div className="max-w-4xl mx-auto px-4">
+          
+          <div className="text-center max-w-3xl mx-auto mb-12 md:mb-16">
+            <span className="text-[11px] font-bold uppercase tracking-widest text-burnt bg-burnt/10 px-3.5 py-1.5 rounded-full">
+              UM MÉTODO SIMPLES PARA USAR NA VIDA REAL
+            </span>
+            <h2 className="text-xl min-[390px]:text-2xl md:text-4xl font-display font-bold text-navy mt-4 leading-tight">
+              ANTES DE RESPONDER NO AUTOMÁTICO, <br />
+              FAÇA UMA PAUSA.
+            </h2>
+            <p className="text-xs min-[390px]:text-sm md:text-base text-slate-text mt-4 leading-relaxed">
+              O Método PAUSA cria espaço entre o pedido de alguém e a sua resposta. Ele ajuda você a sair do impulso de agradar e escolher com mais clareza o que realmente cabe na sua vida.
             </p>
           </div>
 
-          {/* Elegant Horizontal Carousel */}
-          <div className="relative max-w-5xl mx-auto px-1 md:px-4 group/carousel">
-            
-            {/* Left Control Arrow (Desktop only) */}
-            <button
-              onClick={() => scrollCarousel("left")}
-              className="hidden md:flex absolute -left-12 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-cream hover:bg-sand border border-soft-border/60 shadow-sm items-center justify-center text-navy hover:text-burnt active:scale-95 transition-all cursor-pointer z-20"
-              aria-label="Anterior"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-
-            {/* Carousel Container */}
-            <div 
-              ref={carouselRef}
-              className="w-full overflow-x-auto flex gap-4 md:gap-6 snap-x snap-mandatory pb-5 scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none]"
-              style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-            >
-              {[
-                "https://i.ibb.co/cXgsQ863/Chat-GPT-Image-25-de-jun-de-2026-08-05-45-1.webp",
-                "https://i.ibb.co/Sw1pmT9M/Chat-GPT-Image-25-de-jun-de-2026-08-05-45-2.webp",
-                "https://i.ibb.co/jvRVP0sR/Chat-GPT-Image-25-de-jun-de-2026-08-05-45-3.webp",
-                "https://i.ibb.co/hJpJYyBt/Chat-GPT-Image-25-de-jun-de-2026-08-05-46-4.webp",
-                "https://i.ibb.co/vCyHYDWg/Chat-GPT-Image-25-de-jun-de-2026-08-05-46-5.webp",
-                "https://i.ibb.co/Kx9WdzJg/Chat-GPT-Image-25-de-jun-de-2026-08-05-47-6.webp"
-              ].map((imgUrl, idx) => (
-                <div 
-                  key={idx} 
-                  className="w-[230px] min-[390px]:w-[265px] md:w-[285px] shrink-0 snap-start"
-                >
-                  <div 
-                    onClick={() => setZoomedImage(imgUrl)}
-                    className="relative aspect-[9/16] rounded-xl overflow-hidden border border-soft-border/60 bg-white shadow-sm hover:shadow-md hover:border-burnt/30 transition-all duration-300 cursor-zoom-in group/card"
-                  >
-                    <img 
-                      src={imgUrl} 
-                      alt={`Situação Real de Conversa ${idx + 1}`} 
-                      className="w-full h-full object-cover pointer-events-none select-none transition-transform duration-300 group-hover/card:scale-[1.015]" 
-                      loading="lazy"
-                      referrerPolicy="no-referrer"
-                      width="285"
-                      height="506"
-                    />
-                    
-                    {/* Hover Overlay with expand icon */}
-                    <div className="absolute inset-0 bg-navy/10 opacity-0 group-hover/card:opacity-100 transition-opacity flex items-center justify-center">
-                      <div className="bg-cream/95 backdrop-blur-xs px-3.5 py-2 rounded-lg border border-soft-border/60 shadow-sm text-[10px] min-[390px]:text-xs font-bold text-navy uppercase tracking-wider flex items-center gap-1.5 transform translate-y-2 group-hover/card:translate-y-0 transition-transform duration-200">
-                        <Maximize2 className="w-3.5 h-3.5 text-burnt" /> Ampliar Conversa
-                      </div>
-                    </div>
-                  </div>
+          {/* Visual dos 5 Passos (P-A-U-S-A) */}
+          <div className="space-y-4 md:space-y-5 max-w-2xl mx-auto">
+            {[
+              { letter: "P", name: "PARE", desc: "Você não precisa responder na hora." },
+              { letter: "A", name: "AVALIE", desc: "Isso realmente cabe na sua rotina, energia e prioridades?" },
+              { letter: "U", name: "USE UMA FRASE CLARA", desc: "Diga o que precisa ser dito sem se explicar demais." },
+              { letter: "S", name: "SUSTENTE SUA DECISÃO", desc: "Não volte atrás só porque alguém insistiu." },
+              { letter: "A", name: "ACOLHA O DESCONFORTO", desc: "Culpa não é uma ordem para se abandonar." }
+            ].map((step, idx) => (
+              <div 
+                key={idx} 
+                className="flex items-start md:items-center gap-4 bg-cream border border-soft-border p-4 rounded-xl shadow-xs hover:border-burnt/30 transition-colors duration-200"
+              >
+                <span className="w-10 h-10 rounded-lg bg-burnt text-white flex items-center justify-center font-display font-bold text-lg shrink-0 shadow-xs">
+                  {step.letter}
+                </span>
+                <div>
+                  <h4 className="text-sm md:text-base font-bold text-navy font-display tracking-wide">
+                    {step.name}
+                  </h4>
+                  <p className="text-xs md:text-sm text-slate-text mt-0.5 leading-relaxed">
+                    {step.desc}
+                  </p>
                 </div>
-              ))}
-            </div>
-
-            {/* Right Control Arrow (Desktop only) */}
-            <button
-              onClick={() => scrollCarousel("right")}
-              className="hidden md:flex absolute -right-12 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-cream hover:bg-sand border border-soft-border/60 shadow-sm items-center justify-center text-navy hover:text-burnt active:scale-95 transition-all cursor-pointer z-20"
-              aria-label="Próximo"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </button>
+              </div>
+            ))}
           </div>
 
-          {/* Swipe indicator for mobile */}
-          <p className="text-center text-[11px] text-slate-text/75 italic mt-3 md:hidden">
-            Arraste para o lado para ver mais conversas
-          </p>
-
-          {/* CTA Button with Smooth Scroll Below Carousel */}
-          <div className="text-center mt-10 md:mt-12 flex flex-col items-center">
+          <div className="text-center mt-12">
             <button
               onClick={scrollToOQueVoceRecebe}
-              className="bg-burnt text-white font-display font-bold text-[12px] min-[390px]:text-[13px] md:text-sm tracking-wider uppercase py-4 px-8 rounded-lg hover:bg-burnt/95 active:scale-[0.98] transition-all duration-150 shadow-md flex items-center gap-2 cursor-pointer"
+              className="w-full max-w-xs bg-burnt text-white font-display font-bold text-[13px] min-[390px]:text-sm tracking-wider uppercase py-4 px-6 rounded-lg hover:bg-burnt/95 active:scale-[0.98] transition-all duration-150 shadow-md flex items-center justify-center gap-2 cursor-pointer mx-auto"
             >
-              VEJA O QUE VOCÊ VAI RECEBER
-              <ChevronDown className="w-4 h-4 text-cream shrink-0" />
+              VEJA TUDO O QUE VOCÊ RECEBE
             </button>
           </div>
 
@@ -637,153 +645,75 @@ export default function App() {
       </section>
 
       {/* ──────────────────────────────────────────────────────── */}
-      {/* 3. DETALHES DO PRODUTO / O QUE VOCÊ RECEBE */}
+      {/* 4. SEÇÃO "TUDO O QUE VOCÊ RECEBE" */}
       {/* ──────────────────────────────────────────────────────── */}
       <section id="o-que-voce-recebe" className="w-full py-16 md:py-24 max-w-7xl mx-auto px-4 scroll-mt-6">
         
         <div className="text-center max-w-3xl mx-auto mb-12 md:mb-16">
-          <span className="text-[11px] font-bold uppercase tracking-widest text-burnt bg-burnt/10 px-3 py-1 rounded-full">
-            MÉTODO COMPLETO
+          <span className="text-[11px] font-bold uppercase tracking-widest text-burnt bg-burnt/10 px-3.5 py-1.5 rounded-full">
+            CONTEÚDO DO GUIA
           </span>
           <h2 className="text-xl min-[390px]:text-2xl md:text-4xl font-display font-bold text-navy mt-4 leading-tight">
-            O QUE É O MÉTODO PAUSA?
+            TUDO O QUE VOCÊ RECEBE AO ENTRAR HOJE
           </h2>
-          <p className="text-xs min-[390px]:text-sm md:text-base text-slate-text mt-4 max-w-2xl mx-auto font-medium">
-            Um guia prático para criar espaço entre o pedido de alguém e a sua resposta — sem brigar, sem se explicar demais e sem se abandonar por culpa.
-          </p>
         </div>
 
-        {/* Grid de 5 componentes - Altamente responsivo e polido, sem imagens */}
-        <div className="grid grid-cols-1 md:grid-cols-6 gap-6">
+        {/* Grid de Cards - Organização Premium */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
           
-          {/* CARD 1 — O MÉTODO PAUSA — DESTAQUE (ocupa 2 colunas no desktop) */}
-          <div className="md:col-span-4 bg-cream rounded-xl p-6 border border-soft-border shadow-sm flex flex-col justify-between">
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-burnt/10 text-burnt flex items-center justify-center shrink-0">
-                  <BookOpen className="w-5 h-5" />
-                </div>
-                <div>
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-burnt">Destaque Principal</span>
-                  <h3 className="text-lg md:text-xl font-display font-bold text-navy">O MÉTODO PAUSA</h3>
-                </div>
+          {[
+            {
+              title: "Método PAUSA",
+              desc: "O passo a passo para parar de aceitar tudo no automático.",
+              tag: "Metodologia"
+            },
+            {
+              title: "Frases prontas para dizer não",
+              desc: "Respostas claras, educadas e firmes.",
+              tag: "Templates Prontos"
+            },
+            {
+              title: "Como recusar sem se explicar demais",
+              desc: "Para favores, convites, cobranças e pedidos.",
+              tag: "Comunicação Prática"
+            },
+            {
+              title: "Mini plano de 7 dias",
+              desc: "Pequenos exercícios para começar a se posicionar.",
+              tag: "Plano Prático"
+            },
+            {
+              title: "Checklist antes de dizer sim",
+              desc: "Para perceber se você quer aceitar ou está apenas com medo de decepcionar.",
+              tag: "Clareza Mental"
+            }
+          ].map((item, idx) => (
+            <div 
+              key={idx} 
+              className={`bg-cream border border-soft-border rounded-xl p-6 shadow-sm flex flex-col justify-between hover:border-burnt/25 transition-colors duration-200 ${
+                idx === 0 ? "md:col-span-2 lg:col-span-1" : ""
+              }`}
+            >
+              <div className="space-y-4">
+                <span className="text-[10px] font-bold text-burnt uppercase tracking-widest block bg-burnt/5 w-fit px-2.5 py-1 rounded">
+                  {item.tag}
+                </span>
+                <h3 className="text-base min-[390px]:text-lg font-display font-bold text-navy">
+                  {item.title}
+                </h3>
+                <p className="text-xs min-[390px]:text-sm text-slate-text leading-relaxed">
+                  {item.desc}
+                </p>
               </div>
-              <p className="text-xs min-[390px]:text-sm text-slate-text leading-relaxed">
-                Um passo a passo simples para sair do “sim” automático e responder com mais clareza.
-              </p>
-
-              {/* Expansão do Método PAUSA */}
-              <div className="mt-4 border border-soft-border/80 rounded-lg bg-sand/30 overflow-hidden">
-                <button
-                  onClick={() => setIsPausaExpanded(!isPausaExpanded)}
-                  className="w-full flex items-center justify-between p-3.5 text-left text-xs min-[390px]:text-sm font-semibold text-navy bg-sand/45 hover:bg-sand/60 transition-colors cursor-pointer"
-                  aria-expanded={isPausaExpanded}
-                >
-                  <span>Conheça as etapas do Método PAUSA</span>
-                  {isPausaExpanded ? <ChevronUp className="w-4 h-4 text-burnt" /> : <ChevronDown className="w-4 h-4 text-burnt" />}
-                </button>
-                
-                {isPausaExpanded && (
-                  <div className="p-4 space-y-3.5 border-t border-soft-border/60 font-sans text-xs min-[390px]:text-sm bg-cream/70">
-                    <div className="flex items-start gap-2.5">
-                      <span className="w-6 h-6 rounded-md bg-burnt text-white flex items-center justify-center font-bold text-xs shrink-0">P</span>
-                      <p className="pt-0.5"><strong className="text-navy">PARE</strong> antes de responder.</p>
-                    </div>
-                    <div className="flex items-start gap-2.5">
-                      <span className="w-6 h-6 rounded-md bg-navy text-cream flex items-center justify-center font-bold text-xs shrink-0">A</span>
-                      <p className="pt-0.5"><strong className="text-navy">AVALIE</strong> se isso realmente cabe na sua vida.</p>
-                    </div>
-                    <div className="flex items-start gap-2.5">
-                      <span className="w-6 h-6 rounded-md bg-burnt text-white flex items-center justify-center font-bold text-xs shrink-0">U</span>
-                      <p className="pt-0.5"><strong className="text-navy">USE</strong> uma frase curta e clara.</p>
-                    </div>
-                    <div className="flex items-start gap-2.5">
-                      <span className="w-6 h-6 rounded-md bg-navy text-cream flex items-center justify-center font-bold text-xs shrink-0">S</span>
-                      <p className="pt-0.5"><strong className="text-navy">SUSTENTE</strong> a sua decisão.</p>
-                    </div>
-                    <div className="flex items-start gap-2.5">
-                      <span className="w-6 h-6 rounded-md bg-burnt text-white flex items-center justify-center font-bold text-xs shrink-0">A</span>
-                      <p className="pt-0.5"><strong className="text-navy">ACOLHA</strong> a culpa sem voltar atrás.</p>
-                    </div>
-                  </div>
-                )}
+              <div className="mt-6 pt-4 border-t border-soft-border/40 flex items-center gap-1.5 text-xs text-burnt font-semibold uppercase tracking-wider">
+                <Check className="w-4 h-4 text-burnt" /> Incluso
               </div>
             </div>
-
-            <div className="mt-5 pt-4 border-t border-soft-border/55">
-              <p className="text-xs min-[390px]:text-sm font-serif italic text-burnt font-medium">
-                Você não precisa decidir sob pressão.
-              </p>
-            </div>
-          </div>
-
-          {/* CARD 2 — FRASES PRONTAS */}
-          <div className="md:col-span-2 bg-cream rounded-xl p-6 border border-soft-border shadow-sm flex flex-col justify-between">
-            <div className="space-y-4">
-              <div className="w-10 h-10 rounded-lg bg-burnt/10 text-burnt flex items-center justify-center shrink-0">
-                <FileText className="w-5 h-5" />
-              </div>
-              <h3 className="text-base min-[390px]:text-lg font-display font-bold text-navy">FRASES PRONTAS PARA DIZER NÃO</h3>
-              <p className="text-xs min-[390px]:text-sm text-slate-text leading-relaxed">
-                Respostas educadas e firmes para você se posicionar sem soar agressivo.
-              </p>
-            </div>
-            <div className="mt-6 text-[11px] font-semibold text-burnt uppercase tracking-widest">
-              Aplicações práticas
-            </div>
-          </div>
-
-          {/* CARD 3 — COMO RECUSAR */}
-          <div className="md:col-span-2 bg-cream rounded-xl p-6 border border-soft-border shadow-sm flex flex-col justify-between">
-            <div className="space-y-4">
-              <div className="w-10 h-10 rounded-lg bg-burnt/10 text-burnt flex items-center justify-center shrink-0">
-                <Lock className="w-5 h-5" />
-              </div>
-              <h3 className="text-base min-[390px]:text-lg font-display font-bold text-navy">COMO RECUSAR SEM SE EXPLICAR DEMAIS</h3>
-              <p className="text-xs min-[390px]:text-sm text-slate-text leading-relaxed">
-                Aprenda a recusar favores, convites, cobranças e pedidos sem justificar cada decisão.
-              </p>
-            </div>
-            <div className="mt-6 text-[11px] font-semibold text-burnt uppercase tracking-widest">
-              Livre de explicações
-            </div>
-          </div>
-
-          {/* CARD 4 — MINI PLANO */}
-          <div className="md:col-span-2 bg-cream rounded-xl p-6 border border-soft-border shadow-sm flex flex-col justify-between">
-            <div className="space-y-4">
-              <div className="w-10 h-10 rounded-lg bg-burnt/10 text-burnt flex items-center justify-center shrink-0">
-                <Calendar className="w-5 h-5" />
-              </div>
-              <h3 className="text-base min-[390px]:text-lg font-display font-bold text-navy">MINI PLANO DE 7 DIAS</h3>
-              <p className="text-xs min-[390px]:text-sm text-slate-text leading-relaxed">
-                Pequenos desafios para começar a treinar seus limites com mais consistência.
-              </p>
-            </div>
-            <div className="mt-6 text-[11px] font-semibold text-burnt uppercase tracking-widest">
-              Evolução diária
-            </div>
-          </div>
-
-          {/* CARD 5 — CHECKLIST ANTES */}
-          <div className="md:col-span-2 bg-cream rounded-xl p-6 border border-soft-border shadow-sm flex flex-col justify-between">
-            <div className="space-y-4">
-              <div className="w-10 h-10 rounded-lg bg-burnt/10 text-burnt flex items-center justify-center shrink-0">
-                <Check className="w-5 h-5" />
-              </div>
-              <h3 className="text-base min-[390px]:text-lg font-display font-bold text-navy">CHECKLIST ANTES DE DIZER SIM</h3>
-              <p className="text-xs min-[390px]:text-sm text-slate-text leading-relaxed">
-                Descubra se você realmente quer aceitar ou se está apenas com medo de decepcionar alguém.
-              </p>
-            </div>
-            <div className="mt-6 text-[11px] font-semibold text-burnt uppercase tracking-widest">
-              Clareza mental
-            </div>
-          </div>
+          ))}
 
         </div>
 
-        {/* Faixa de Destaque abaixo do grid */}
+        {/* Faixa de Encerramento */}
         <div className="mt-12 bg-cream border border-soft-border rounded-xl p-6 min-[390px]:p-8 text-center max-w-4xl mx-auto shadow-sm">
           <p className="text-sm min-[390px]:text-base md:text-lg text-navy font-medium leading-relaxed">
             Você não precisa mudar sua personalidade. Precisa aprender a se respeitar com mais clareza.
@@ -966,12 +896,15 @@ export default function App() {
                 <h3 className="text-lg md:text-xl font-display font-bold text-navy">GUIA ESSENCIAL</h3>
               </div>
 
-              <div className="mb-6">
+              <div className="mb-6 space-y-2">
+                <p className="text-xs text-navy/60 font-semibold">
+                  De <span className="line-through">R$ 47,00</span> por apenas:
+                </p>
                 <div className="flex items-baseline gap-1.5">
-                  <span className="text-2xl font-bold text-navy">R$</span>
-                  <span className="text-4xl min-[390px]:text-5xl font-display font-extrabold text-navy leading-none">9,90</span>
+                  <span className="text-2xl font-bold text-burnt">R$</span>
+                  <span className="text-4xl min-[390px]:text-5xl font-display font-extrabold text-burnt leading-none">9,90</span>
                 </div>
-                <p className="text-xs text-slate-text mt-2 font-medium">
+                <p className="text-xs text-slate-text font-medium">
                   Pagamento único • Acesso imediato
                 </p>
               </div>
@@ -1034,12 +967,15 @@ export default function App() {
                 <h3 className="text-lg md:text-xl font-display font-bold text-navy">PLANO COMPLETO</h3>
               </div>
 
-              <div className="mb-6">
+              <div className="mb-6 space-y-2">
+                <p className="text-xs text-navy/60 font-semibold">
+                  De <span className="line-through">R$ 97,00</span> por apenas:
+                </p>
                 <div className="flex items-baseline gap-1.5">
-                  <span className="text-2xl font-bold text-navy">R$</span>
-                  <span className="text-4xl min-[390px]:text-5xl font-display font-extrabold text-navy leading-none">19,90</span>
+                  <span className="text-2xl font-bold text-burnt">R$</span>
+                  <span className="text-4xl min-[390px]:text-5xl font-display font-extrabold text-burnt leading-none">19,90</span>
                 </div>
-                <p className="text-xs text-slate-text mt-2 font-medium">
+                <p className="text-xs text-slate-text font-medium">
                   Pagamento único • Acesso imediato
                 </p>
               </div>
@@ -1089,6 +1025,41 @@ export default function App() {
 
         </div>
 
+      </section>
+
+      {/* ──────────────────────────────────────────────────────── */}
+      {/* 5.5. AUTORIDADE — QUEM CRIOU O MÉTODO PAUSA? */}
+      {/* ──────────────────────────────────────────────────────── */}
+      <section className="w-full bg-cream py-16 md:py-24 border-b border-soft-border/50">
+        <div className="max-w-5xl mx-auto px-4 grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center">
+          
+          <div className="md:col-span-5">
+            <div className="overflow-hidden rounded-xl border border-soft-border/60 bg-white shadow-sm">
+              <img 
+                src="https://i.ibb.co/V02jfQWb/Arlinda-Souza-Especialista.webp" 
+                alt="Arlinda Souza - Criadora do Método PAUSA" 
+                className="w-full h-auto object-cover aspect-[4/5] md:aspect-auto"
+                loading="lazy"
+                referrerPolicy="no-referrer"
+                width="400"
+                height="500"
+              />
+            </div>
+          </div>
+
+          <div className="md:col-span-7 space-y-4 text-left">
+            <span className="text-[11px] font-bold uppercase tracking-widest text-burnt bg-burnt/10 px-3.5 py-1.5 rounded-full">
+              QUEM CRIOU O MÉTODO PAUSA?
+            </span>
+            <h2 className="text-xl min-[390px]:text-2xl md:text-4xl font-display font-bold text-navy leading-tight pt-2">
+              Arlinda Souza
+            </h2>
+            <p className="text-xs min-[390px]:text-sm md:text-base text-slate-text leading-relaxed font-sans">
+              Arlinda Souza é especialista em comportamento, comunicação assertiva e limites saudáveis. Após anos ajudando pessoas a superarem a estafa profissional e o esgotamento por excesso de responsabilidade, desenvolveu o Método PAUSA: uma abordagem prática para quem deseja se posicionar sem brigar, sem se justificar e, principalmente, sem carregar a culpa por dizer não.
+            </p>
+          </div>
+
+        </div>
       </section>
 
       {/* ──────────────────────────────────────────────────────── */}
@@ -1241,6 +1212,16 @@ export default function App() {
             )}
           </div>
 
+        </div>
+
+        {/* Botão Final pós-FAQ de Quero Comprar para rolar de volta para os planos */}
+        <div className="text-center mt-12">
+          <button
+            onClick={scrollToPlanos}
+            className="w-full max-w-md bg-burnt text-white font-display font-bold text-[13px] min-[390px]:text-sm md:text-base tracking-wider uppercase py-4 px-8 rounded-lg hover:bg-burnt/95 active:scale-[0.98] transition-all duration-150 shadow-md flex items-center justify-center gap-2 cursor-pointer mx-auto"
+          >
+            QUERO COMPRAR • ESCOLHER MEU PLANO
+          </button>
         </div>
 
       </section>
