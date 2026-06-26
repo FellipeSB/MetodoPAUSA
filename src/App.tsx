@@ -24,12 +24,12 @@ const SecureRedirects = lazy(() => import("./components/SecureRedirects"));
 // CONFIGURAÇÃO EDITÁVEL
 // ============================================================================
 export const config = {
-  basicPrice: "R$9,90",
-  premiumPrice: "R$19,90",
-  premiumUpsellPrice: "R$16,90",
-  basicCheckoutUrl: "https://checkout.transacaoprotegida.com/c35942dc-4391-43d3-894d-753de3f8479e", // Plano 9,90 (Guia Essencial)
-  premiumCheckoutUrl: "https://checkout.transacaoprotegida.com/90cc5cc5-fefb-4490-80ee-766fb52bad5a", // Plano 19,90 (Plano Completo)
-  premiumUpsellCheckoutUrl: "https://checkout.transacaoprotegida.com/f595f38f-70c2-49dc-8ce0-77e09f37a68b", // Plano 16,90 (Upsell)
+  basicPrice: "R$19,90",
+  premiumPrice: "R$29,90",
+  premiumUpsellPrice: "R$29,90",
+  basicCheckoutUrl: "https://checkout.transacaoprotegida.com/c35942dc-4391-43d3-894d-753de3f8479e", // Plano 19,90 (Guia Essencial)
+  premiumCheckoutUrl: "https://checkout.transacaoprotegida.com/90cc5cc5-fefb-4490-80ee-766fb52bad5a", // Plano 29,90 (Plano Completo)
+  premiumUpsellCheckoutUrl: "https://checkout.transacaoprotegida.com/f595f38f-70c2-49dc-8ce0-77e09f37a68b", // Plano 29,90 (Upsell)
   guaranteeDays: 7,
   assets: {
     hero: "https://i.ibb.co/Lz9yrNrk/Hero.webp",
@@ -349,7 +349,7 @@ export default function App() {
     setIsUpsellOpen(true);
     trackPixel("InitiateCheckout", {
       content_name: "Guia Essencial",
-      value: 9.90,
+      value: 19.90,
       currency: "BRL"
     });
     trackCustomPixel("OpenUpsellModal", { offer: "Guia Essencial -> Upgrade" });
@@ -375,40 +375,40 @@ export default function App() {
   const handleAcceptUpgrade = () => {
     trackPixel("Purchase", {
       content_name: "Plano Completo (Upsell)",
-      value: 16.90,
+      value: 29.90,
       currency: "BRL"
     });
-    trackCustomPixel("AcceptUpgrade", { price: 16.90 });
+    trackCustomPixel("AcceptUpgrade", { price: 29.90 });
     window.location.href = addUtmsToUrl(config.premiumUpsellCheckoutUrl);
   };
 
   const handleDeclineUpgrade = () => {
     trackPixel("Purchase", {
       content_name: "Guia Essencial",
-      value: 9.90,
+      value: 19.90,
       currency: "BRL"
     });
-    trackCustomPixel("DeclineUpgrade", { price: 9.90 });
+    trackCustomPixel("DeclineUpgrade", { price: 19.90 });
     window.location.href = addUtmsToUrl(config.basicCheckoutUrl);
   };
 
   const handleBuyBasicDirectly = () => {
     trackPixel("InitiateCheckout", {
       content_name: "Guia Essencial (Direto)",
-      value: 9.90,
+      value: 19.90,
       currency: "BRL"
     });
-    trackCustomPixel("BuyBasicDirect", { price: 9.90 });
+    trackCustomPixel("BuyBasicDirect", { price: 19.90 });
     window.location.href = addUtmsToUrl(config.basicCheckoutUrl);
   };
 
   const handleBuyPremiumDirectly = () => {
     trackPixel("InitiateCheckout", {
       content_name: "Plano Completo (Direto)",
-      value: 19.90,
+      value: 29.90,
       currency: "BRL"
     });
-    trackCustomPixel("BuyPremiumDirect", { price: 19.90 });
+    trackCustomPixel("BuyPremiumDirect", { price: 29.90 });
     window.location.href = addUtmsToUrl(config.premiumCheckoutUrl);
   };
 
@@ -669,7 +669,7 @@ export default function App() {
             },
             {
               title: "Frases prontas para dizer não",
-              desc: "Respostas claras, educadas e firmes.",
+              desc: "Respostas claras, educadas e firmes para situações reais.",
               tag: "Templates Prontos"
             },
             {
@@ -857,10 +857,16 @@ export default function App() {
 
           </div>
 
-          <div className="text-center mt-12 pt-8 border-t border-cream/10">
-            <span className="text-xs min-[390px]:text-sm text-cream/80 tracking-wide font-sans">
+          <div className="text-center mt-12 pt-8 border-t border-cream/10 space-y-6">
+            <span className="text-xs min-[390px]:text-sm text-cream/80 tracking-wide font-sans block">
               Não basta entender seus limites. Você precisa praticá-los até eles se tornarem naturais.
             </span>
+            <button
+              onClick={scrollToPlanos}
+              className="w-full max-w-md bg-burnt text-white font-display font-bold text-[13px] min-[390px]:text-sm md:text-base tracking-wider uppercase py-4 px-8 rounded-lg hover:bg-burnt/95 active:scale-[0.98] transition-all duration-150 shadow-md flex items-center justify-center gap-2 cursor-pointer mx-auto"
+            >
+              VER OS PLANOS E ESCOLHER O MEU
+            </button>
           </div>
 
         </div>
@@ -877,10 +883,10 @@ export default function App() {
             Preço Justo e Transparente
           </span>
           <h2 className="text-xl min-[390px]:text-2xl md:text-4xl font-display font-bold text-navy mt-2 leading-tight">
-            Escolha como você quer começar.
+            ESCOLHA A FORMA QUE FAZ MAIS SENTIDO PARA VOCÊ
           </h2>
           <p className="text-xs min-[390px]:text-sm md:text-base text-slate-text mt-3">
-            Você pode começar pelo essencial ou levar a versão completa com todas as ferramentas de prática.
+            Oferta de lançamento por tempo limitado. Escolha entre o essencial para começar ou a versão completa para máxima prática.
           </p>
         </div>
 
@@ -888,7 +894,7 @@ export default function App() {
         <div className="flex flex-col md:flex-row gap-8 max-w-4xl mx-auto items-stretch justify-center">
           
           {/* PLANO 1 — GUIA ESSENCIAL */}
-          <div className="w-full md:w-1/2 bg-cream border border-soft-border rounded-2xl p-6 min-[390px]:p-8 shadow-sm flex flex-col justify-between transform hover:scale-[1.01] transition-transform">
+          <div className="w-full md:w-1/2 bg-cream border border-soft-border rounded-2xl p-6 min-[390px]:p-8 shadow-sm flex flex-col justify-between transform hover:scale-[1.01] transition-transform order-2 md:order-1">
             
             <div>
               <div className="mb-6 space-y-1">
@@ -902,10 +908,10 @@ export default function App() {
                 </p>
                 <div className="flex items-baseline gap-1.5">
                   <span className="text-2xl font-bold text-burnt">R$</span>
-                  <span className="text-4xl min-[390px]:text-5xl font-display font-extrabold text-burnt leading-none">9,90</span>
+                  <span className="text-4xl min-[390px]:text-5xl font-display font-extrabold text-burnt leading-none">19,90</span>
                 </div>
                 <p className="text-xs text-slate-text font-medium">
-                  Pagamento único • Acesso imediato
+                  Pagamento único • Acesso imediato • Garantia de 7 dias
                 </p>
               </div>
 
@@ -937,11 +943,11 @@ export default function App() {
             <div className="space-y-4">
               <button
                 ref={triggerButtonRef}
-                /* Para reativar o Upsell de R$ 16,90 no futuro, altere a linha abaixo de volta para: onClick={() => openUpsell(triggerButtonRef)} */
+                /* Para reativar o Upsell no futuro, altere a linha abaixo de volta para: onClick={() => openUpsell(triggerButtonRef)} */
                 onClick={handleBuyBasicDirectly}
-                className="w-full bg-navy text-cream font-display font-bold text-[13px] min-[390px]:text-sm md:text-base tracking-wider uppercase py-4 px-6 rounded-lg hover:bg-navy/95 active:scale-[0.98] transition-all duration-150 min-h-[52px] shadow-sm flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full bg-navy text-cream font-display font-bold text-[13px] min-[390px]:text-sm md:text-base tracking-wider uppercase py-4 px-6 rounded-lg hover:bg-navy/95 active:scale-[0.98] transition-all duration-150 min-h-[52px] shadow-sm flex items-center justify-center gap-2 cursor-pointer text-center"
               >
-                Quero o Guia Essencial
+                QUERO O GUIA ESSENCIAL POR R$19,90
               </button>
 
               {/* Repetir badges de confiança */}
@@ -955,7 +961,7 @@ export default function App() {
           </div>
 
           {/* PLANO 2 — PLANO COMPLETO (Com Destaque) */}
-          <div className="w-full md:w-1/2 bg-[#FCF8F2] border-2 border-burnt rounded-2xl p-6 min-[390px]:p-8 shadow-md flex flex-col justify-between relative transform hover:scale-[1.01] transition-transform">
+          <div className="w-full md:w-1/2 bg-[#FCF8F2] border-2 border-burnt rounded-2xl p-6 min-[390px]:p-8 shadow-md flex flex-col justify-between relative transform hover:scale-[1.01] transition-transform order-1 md:order-2">
             
             <div className="absolute -top-4 right-6 bg-burnt text-white text-[9px] min-[390px]:text-[10px] font-bold px-3 py-1 rounded-full tracking-wider uppercase shadow-sm">
               Mais Completo
@@ -973,10 +979,10 @@ export default function App() {
                 </p>
                 <div className="flex items-baseline gap-1.5">
                   <span className="text-2xl font-bold text-burnt">R$</span>
-                  <span className="text-4xl min-[390px]:text-5xl font-display font-extrabold text-burnt leading-none">19,90</span>
+                  <span className="text-4xl min-[390px]:text-5xl font-display font-extrabold text-burnt leading-none">29,90</span>
                 </div>
                 <p className="text-xs text-slate-text font-medium">
-                  Pagamento único • Acesso imediato
+                  Pagamento único • Acesso imediato • Garantia de 7 dias
                 </p>
               </div>
 
@@ -1008,9 +1014,9 @@ export default function App() {
             <div className="space-y-4">
               <button
                 onClick={handleBuyPremiumDirectly}
-                className="w-full bg-burnt text-white font-display font-bold text-[13px] min-[390px]:text-sm md:text-base tracking-wider uppercase py-4 px-6 rounded-lg hover:bg-burnt/95 active:scale-[0.98] transition-all duration-150 min-h-[52px] shadow-sm flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full bg-burnt text-white font-display font-bold text-[13px] min-[390px]:text-sm md:text-base tracking-wider uppercase py-4 px-6 rounded-lg hover:bg-burnt/95 active:scale-[0.98] transition-all duration-150 min-h-[52px] shadow-sm flex items-center justify-center gap-2 cursor-pointer text-center"
               >
-                Quero o Plano Completo
+                QUERO O PLANO COMPLETO POR R$29,90
               </button>
 
               {/* Repetir badges de confiança */}
@@ -1302,10 +1308,10 @@ export default function App() {
               
               <div className="space-y-2">
                 <h3 className="text-base min-[390px]:text-lg md:text-xl font-display font-bold text-navy leading-tight">
-                  Por apenas mais R$7,00, leve o Plano Completo por R$16,90.
+                  Por apenas mais R$10,00, leve o Plano Completo por R$29,90.
                 </h3>
                 <p className="text-xs min-[390px]:text-sm text-slate-text leading-relaxed">
-                  Você já escolheu o Guia Essencial. Com esta oportunidade única de upgrade, adicione todas as ferramentas do Plano Completo por apenas R$16,90 (economize R$3,00)!
+                  Você já escolheu o Guia Essencial. Com esta oportunidade única de upgrade, adicione todas as ferramentas do Plano Completo por apenas R$29,90 (economize R$10,00 na diferença)!
                 </p>
               </div>
 
@@ -1333,11 +1339,11 @@ export default function App() {
               <div className="grid grid-cols-2 gap-4 pt-2">
                 <div className="bg-sand/20 border border-soft-border/50 rounded-lg p-3 text-center">
                   <span className="text-[10px] font-bold text-slate-text uppercase tracking-wider block">Guia Essencial</span>
-                  <span className="text-base min-[390px]:text-lg font-bold text-slate-text/90">R$ 9,90</span>
+                  <span className="text-base min-[390px]:text-lg font-bold text-slate-text/90">R$ 19,90</span>
                 </div>
                 <div className="bg-burnt/5 border border-burnt/35 rounded-lg p-3 text-center">
                   <span className="text-[10px] font-bold text-burnt uppercase tracking-wider block">Plano Completo</span>
-                  <span className="text-base min-[390px]:text-lg font-bold text-burnt">R$ 16,90</span>
+                  <span className="text-base min-[390px]:text-lg font-bold text-burnt">R$ 29,90</span>
                 </div>
               </div>
 
@@ -1351,14 +1357,14 @@ export default function App() {
                 onClick={handleAcceptUpgrade}
                 className="w-full bg-burnt text-white font-display font-bold text-[13px] min-[390px]:text-sm tracking-wider uppercase py-4 rounded-lg hover:bg-burnt/95 active:scale-[0.98] transition-all duration-150 min-h-[52px] shadow-sm flex items-center justify-center gap-1 cursor-pointer"
               >
-                Sim, quero o Plano Completo por R$16,90
+                Sim, quero o Plano Completo por R$29,90
               </button>
 
               <button
                 onClick={handleDeclineUpgrade}
                 className="w-full bg-cream border border-navy/70 text-navy font-display font-bold text-[12px] min-[390px]:text-[13px] tracking-wider uppercase py-3.5 rounded-lg hover:bg-sand/30 active:scale-[0.98] transition-all duration-150 min-h-[48px] flex items-center justify-center cursor-pointer"
               >
-                Continuar apenas com o Guia Essencial por R$9,90
+                Continuar apenas com o Guia Essencial por R$19,90
               </button>
 
               {/* Margem de segurança inferior para mobile screens */}
@@ -1466,7 +1472,7 @@ export default function App() {
             <div className="w-full md:w-auto flex items-center gap-3">
               <div className="hidden lg:flex flex-col text-right">
                 <span className="text-[10px] text-cream/60 line-through">De R$ 47,00</span>
-                <span className="text-sm font-bold text-white">Por apenas R$ 9,90</span>
+                <span className="text-sm font-bold text-white">Por apenas R$ 19,90</span>
               </div>
               <button
                 onClick={() => {
@@ -1474,11 +1480,11 @@ export default function App() {
                   if (ofertaSection) {
                     ofertaSection.scrollIntoView({ behavior: "smooth" });
                   }
-                  trackCustomPixel("FloatingCtaClicked", { price: 9.90 });
+                  trackCustomPixel("FloatingCtaClicked", { price: 19.90 });
                 }}
                 className="w-full md:w-auto bg-burnt text-white font-display font-bold text-xs tracking-wider uppercase py-3 px-6 rounded-lg hover:bg-burnt/95 active:scale-95 transition-all shadow-md flex items-center justify-center gap-1.5 cursor-pointer min-h-[44px]"
               >
-                QUERO COMEÇAR POR R$9,90
+                QUERO COMEÇAR POR R$19,90
                 <ChevronRight className="w-4 h-4 text-white shrink-0" />
               </button>
             </div>
