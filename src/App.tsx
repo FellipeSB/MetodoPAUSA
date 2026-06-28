@@ -176,11 +176,99 @@ const addUtmsToUrl = (url: string): string => {
   }
 };
 
+// ============================================================================
+// DADOS DO SIMULADOR INTERATIVO DO WHATSAPP (MÉTODO PAUSA)
+// ============================================================================
+const SIMULATOR_DATA = {
+  amiga: {
+    tabLabel: "💬 Amiga (Empréstimo)",
+    name: "Ana Amiga",
+    avatarColor: "bg-amber-500",
+    inboundMsg: "Amiga, você pode me emprestar R$500? Eu pago sem falta no começo do mês que vem, juro! Quebra esse galho pra mim, estou desesperada... 🥺",
+    inboundTime: "14:32",
+    culpado: {
+      msg: "Ai amiga, eu tô meio apertada esse mês mas tudo bem... posso sim! Deixa eu ver como faço aqui na minha conta e te mando até o fim do dia...",
+      consequence: "Você se aperta financeiramente, fica ressentida por não conseguir dizer não e passa semanas ansiosa com medo de não receber de volta."
+    },
+    pausa: {
+      msg: "Oi Ana! No momento eu não tenho como te emprestar esse valor. Espero que consiga resolver logo de outra forma! Torcendo por você.",
+      consequence: "Você protege seu dinheiro e sua paz. Resposta limpa, honesta e sem desculpas em excesso. A amizade continua intacta e sem ressentimento."
+    }
+  },
+  trabalho: {
+    tabLabel: "💼 Chefe (Fora de Hora)",
+    name: "Chefe Roberto",
+    avatarColor: "bg-slate-600",
+    inboundMsg: "Olá, consegue me enviar aquele relatório consolidado ainda hoje? Sei que é domingo, mas o cliente me mandou mensagem pedindo com urgência para amanhã às 8h.",
+    inboundTime: "15:45",
+    culpado: {
+      msg: "Oi chefe... Claro, sem problemas! Vou ligar o computador aqui correndo e já faço isso. Me dá umas 2 horinhas e já te envio por e-mail.",
+      consequence: "Seu único dia de descanso com a família é arruinado. Você trabalha de graça, sob estresse, e ensina seu chefe que você está disponível 24h por dia."
+    },
+    pausa: {
+      msg: "Oi Roberto! Hoje estou sem acesso ao computador, mas amanhã logo no início do expediente o relatório será minha prioridade número um. Boa noite!",
+      consequence: "Seu domingo de lazer e saúde mental são preservados. Você estabelece um limite profissional saudável sem parecer grossa ou descompromissada."
+    }
+  },
+  familia: {
+    tabLabel: "🏠 Família (Favor Difícil)",
+    name: "Tia Regina",
+    avatarColor: "bg-teal-600",
+    inboundMsg: "Minha querida, você pode me levar ao médico amanhã às 14h? Sei que você trabalha, mas como você trabalha de casa é mais flexível pra você, né? Beijos!",
+    inboundTime: "10:15",
+    culpado: {
+      msg: "Oi tia! Posso sim... Vou ver se desmarco duas reuniões importantes de trabalho aqui e dou um jeito de te levar. Que horas passo aí?",
+      consequence: "Você prejudica suas entregas profissionais, acumula tarefas acumuladas para a noite e sente uma culpa enorme por não conseguir equilibrar tudo."
+    },
+    pausa: {
+      msg: "Oi tia Regina! Amanhã à tarde é um horário em que estarei no meio de compromissos de trabalho inadiáveis. Infelizmente dessa vez não consigo te levar. Espero que encontre outra opção!",
+      consequence: "Seu trabalho home-office é respeitado como trabalho de verdade. Você diz não com clareza e elegância, sem precisar mentir ou se desdobrar em mil."
+    }
+  },
+  cliente: {
+    tabLabel: "💰 Cliente (Sexta à Noite)",
+    name: "Marcos Cliente",
+    avatarColor: "bg-indigo-600",
+    inboundMsg: "Oi, tudo bem? Olha só, conseguimos fechar aquele projeto hoje, mas meu orçamento estourou. Consegue me dar 40% de desconto para fecharmos agora mesmo?",
+    inboundTime: "18:10",
+    culpado: {
+      msg: "Oi Marcos, entendo seu lado... Puxa, tudo bem então, eu faço esse desconto sim só para a gente não perder a oportunidade de trabalhar juntos. Fechado!",
+      consequence: "Você desvaloriza totalmente suas horas de dedicação, trabalha sem margem de lucro e atrai um cliente que vai te cobrar o triplo por metade do preço."
+    },
+    pausa: {
+      msg: "Oi Marcos! Fico feliz que queira fechar. O valor que enviei é o mínimo para garantir a entrega ideal para o seu projeto. Caso queira, podemos reduzir alguns itens do escopo para ajustar ao seu orçamento. O que acha?",
+      consequence: "Você protege sua dignidade financeira e seu posicionamento profissional. O cliente entende que seu serviço é sério e respeita suas regras de negócio."
+    }
+  }
+};
+
 export default function App() {
   const [sessionPage, setSessionPage] = useState<"landing" | "basic" | "premium" | "cancelled">("landing");
   const [isUpsellOpen, setIsUpsellOpen] = useState(false);
   const [activeFaqIndex, setActiveFaqIndex] = useState<number | null>(null);
   const [isPausaExpanded, setIsPausaExpanded] = useState(true);
+
+  // Estados do Simulador do WhatsApp (Dopamina e Prática)
+  const [activeSimTab, setActiveSimTab] = useState<"amiga" | "trabalho" | "familia" | "cliente">("amiga");
+  const [simAnswerMode, setSimAnswerMode] = useState<"none" | "culpado" | "pausa">("none");
+  const [isSimTyping, setIsSimTyping] = useState(false);
+
+  const handleSimTabChange = (tab: "amiga" | "trabalho" | "familia" | "cliente") => {
+    setActiveSimTab(tab);
+    setSimAnswerMode("none");
+    setIsSimTyping(false);
+    trackCustomPixel("SimulatorTabChanged", { tab });
+  };
+
+  const handleTriggerSimAnswer = (mode: "culpado" | "pausa") => {
+    setIsSimTyping(true);
+    setSimAnswerMode("none");
+    trackCustomPixel("SimulatorAnswerTriggered", { mode, tab: activeSimTab });
+    setTimeout(() => {
+      setIsSimTyping(false);
+      setSimAnswerMode(mode);
+    }, 900); // tempo de digitação satisfatório (dopaminérgico)
+  };
 
   // Estados e Refs adicionais para Carrossel, Zoom de Imagem e Barra Flutuante de Compra
   const [showFloatingBar, setShowFloatingBar] = useState(false);
@@ -488,7 +576,7 @@ export default function App() {
             <button
               onClick={scrollToOQueVoceRecebe}
               id="cta-hero-primary"
-              className="w-full bg-burnt text-white font-display font-bold text-[13px] min-[390px]:text-sm md:text-base tracking-wider uppercase py-4 px-6 rounded-lg hover:bg-burnt/95 active:scale-[0.98] transition-all duration-150 min-h-[52px] shadow-sm flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full bg-burnt text-white font-display font-bold text-[13px] min-[390px]:text-sm md:text-base tracking-wider uppercase py-4 px-6 rounded-lg hover:bg-burnt/95 active:scale-[0.98] transition-all duration-150 min-h-[52px] shadow-sm flex items-center justify-center gap-2 cursor-pointer animate-pulse-subtle"
             >
               QUERO VER O QUE VOU RECEBER
             </button>
@@ -530,7 +618,197 @@ export default function App() {
       </header>
 
       {/* ──────────────────────────────────────────────────────── */}
-      {/* 2. IDENTIFICAÇÃO DE DOR — CHECKLIST EDITORIAL */}
+      {/* 1.5. NOVO: SIMULADOR INTERATIVO DO WHATSAPP (AHA! MOMENT & DOPAMINA) */}
+      {/* ──────────────────────────────────────────────────────── */}
+      <section className="w-full bg-[#FCF8F2] py-14 md:py-20 border-y border-soft-border/60 scroll-mt-6">
+        <div className="max-w-4xl mx-auto px-4">
+          
+          <div className="text-center max-w-2xl mx-auto mb-8 md:mb-12">
+            <span className="inline-flex items-center gap-1.5 text-[10px] min-[390px]:text-[11px] font-bold uppercase tracking-widest text-burnt bg-burnt/10 px-3 py-1 rounded-full animate-pulse">
+              ⚡ Simulador Interativo Método PAUSA
+            </span>
+            <h2 className="text-xl min-[390px]:text-2xl md:text-3.5xl font-display font-extrabold text-navy mt-4 leading-tight">
+              COMO VOCÊ RESPONDERIA A ISTO?
+            </h2>
+            <p className="text-xs min-[390px]:text-sm text-slate-text mt-3">
+              Toque em uma das situações reais do dia a dia abaixo e teste o poder de uma resposta livre de culpa e com limites elegantes.
+            </p>
+          </div>
+
+          {/* Abas Horizontais (Deslizável no Mobile) */}
+          <div className="flex overflow-x-auto pb-3 gap-2 no-scrollbar scroll-smooth snap-x -mx-4 px-4 md:mx-0 md:px-0 justify-start md:justify-center">
+            {(Object.keys(SIMULATOR_DATA) as Array<keyof typeof SIMULATOR_DATA>).map((key) => {
+              const isActive = activeSimTab === key;
+              return (
+                <button
+                  key={key}
+                  onClick={() => handleSimTabChange(key)}
+                  className={`snap-center shrink-0 px-4 py-2.5 rounded-full text-xs font-bold tracking-wide transition-all duration-200 cursor-pointer border ${
+                    isActive
+                      ? "bg-burnt text-white border-burnt shadow-sm scale-[1.03]"
+                      : "bg-cream text-navy/80 border-soft-border/70 hover:bg-sand/35"
+                  }`}
+                >
+                  {SIMULATOR_DATA[key].tabLabel}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Celular Mockup */}
+          <div className="max-w-lg mx-auto bg-[#EFEAE2] rounded-3xl border-4 border-navy shadow-xl overflow-hidden mt-6 flex flex-col h-[520px] relative">
+            
+            {/* Header do Chat */}
+            <div className="bg-[#075E54] text-white px-4 py-3 flex items-center justify-between shadow-sm shrink-0">
+              <div className="flex items-center gap-3">
+                <div className={`w-9 h-9 rounded-full ${SIMULATOR_DATA[activeSimTab].avatarColor} text-white flex items-center justify-center font-bold text-sm shadow-inner`}>
+                  {SIMULATOR_DATA[activeSimTab].name.charAt(0)}
+                </div>
+                <div>
+                  <h4 className="text-sm font-bold tracking-wide leading-none">{SIMULATOR_DATA[activeSimTab].name}</h4>
+                  <div className="flex items-center gap-1 mt-1">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                    <span className="text-[10px] text-emerald-100 font-medium tracking-wide">online</span>
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center gap-4 text-white/95 text-xs">
+                <span className="font-mono bg-emerald-700/60 px-2 py-0.5 rounded tracking-widest">WhatsApp</span>
+              </div>
+            </div>
+
+            {/* Corpo de Mensagens (Fundo Clássico com Scroll) */}
+            <div className="flex-1 p-4 overflow-y-auto space-y-4 flex flex-col justify-start" style={{ backgroundImage: "radial-gradient(rgba(0,0,0,0.04) 1px, transparent 1px)", backgroundSize: "16px 16px" }}>
+              
+              {/* Mensagem Recebida (Inbound) */}
+              <div className="bg-white rounded-2xl rounded-tl-none p-3.5 max-w-[85%] self-start shadow-sm border border-black/5 relative animate-fade-in">
+                <p className="text-xs min-[390px]:text-sm text-slate-800 leading-relaxed font-sans">
+                  {SIMULATOR_DATA[activeSimTab].inboundMsg}
+                </p>
+                <span className="text-[9px] text-slate-400 block text-right mt-1.5 font-mono">
+                  {SIMULATOR_DATA[activeSimTab].inboundTime}
+                </span>
+              </div>
+
+              {/* Estado digitando... */}
+              {isSimTyping && (
+                <div className="bg-emerald-50 border border-emerald-100 rounded-2xl rounded-tr-none p-3 max-w-[85%] self-end shadow-xs flex items-center gap-2">
+                  <div className="flex gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-bounce" style={{ animationDelay: "0ms" }}></span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-bounce" style={{ animationDelay: "150ms" }}></span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-bounce" style={{ animationDelay: "300ms" }}></span>
+                  </div>
+                  <span className="text-[10px] text-emerald-700 font-medium">Aplicando Método PAUSA...</span>
+                </div>
+              )}
+
+              {/* Resposta Gerada */}
+              {simAnswerMode !== "none" && !isSimTyping && (
+                <div className={`rounded-2xl rounded-tr-none p-3.5 max-w-[85%] self-end shadow-sm border animate-fade-in relative ${
+                  simAnswerMode === "culpado"
+                    ? "bg-red-50 border-red-200 text-red-900"
+                    : "bg-[#DCF8C6] border-[#c1e8a9] text-slate-800"
+                }`}>
+                  <p className="text-xs min-[390px]:text-sm leading-relaxed font-sans">
+                    {simAnswerMode === "culpado"
+                      ? SIMULATOR_DATA[activeSimTab].culpado.msg
+                      : SIMULATOR_DATA[activeSimTab].pausa.msg}
+                  </p>
+                  <span className="text-[9px] text-slate-400 block text-right mt-1.5 font-mono">
+                    15:46 ✓✓
+                  </span>
+                </div>
+              )}
+
+            </div>
+
+            {/* Painel de Controle de Ações Interativas (Embaixo do celular) */}
+            <div className="bg-white border-t border-soft-border/70 p-3.5 shrink-0 flex flex-col gap-2">
+              <span className="text-[10px] font-bold text-slate-text uppercase tracking-wider text-center block">
+                Escolha a sua resposta para simular:
+              </span>
+              <div className="grid grid-cols-2 gap-2">
+                
+                <button
+                  onClick={() => handleTriggerSimAnswer("culpado")}
+                  className={`py-3 px-3 rounded-xl border text-[11px] min-[390px]:text-xs font-bold uppercase tracking-wide cursor-pointer transition-all ${
+                    simAnswerMode === "culpado"
+                      ? "bg-red-600 text-white border-red-600 shadow-sm scale-[1.01]"
+                      : "bg-cream text-red-700 border-red-200 hover:bg-red-50"
+                  }`}
+                >
+                  ❌ Sim por Culpa
+                </button>
+
+                <button
+                  onClick={() => handleTriggerSimAnswer("pausa")}
+                  className={`py-3 px-3 rounded-xl border text-[11px] min-[390px]:text-xs font-bold uppercase tracking-wide cursor-pointer transition-all flex items-center justify-center gap-1 ${
+                    simAnswerMode === "pausa"
+                      ? "bg-emerald-600 text-white border-emerald-600 shadow-sm scale-[1.01]"
+                      : "bg-[#E2F5D9] text-emerald-800 border-emerald-300 hover:bg-[#d4eec6] shadow-sm animate-pulse"
+                  }`}
+                >
+                  ✨ Método PAUSA
+                </button>
+
+              </div>
+            </div>
+
+          </div>
+
+          {/* Consequência Emocional Explicada (Fora do Celular para Máximo Impacto) */}
+          <div className="max-w-lg mx-auto mt-4 min-h-[90px] transition-all duration-300">
+            {simAnswerMode === "culpado" && (
+              <div className="bg-red-50 border border-red-100 rounded-xl p-4 text-left shadow-xs animate-fade-in">
+                <h5 className="text-xs font-bold text-red-700 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                  ⚠️ O Preço Oculto do Sim por Culpa:
+                </h5>
+                <p className="text-xs text-red-900 leading-relaxed">
+                  {SIMULATOR_DATA[activeSimTab].culpado.consequence}
+                </p>
+              </div>
+            )}
+
+            {simAnswerMode === "pausa" && (
+              <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-4 text-left shadow-xs animate-fade-in">
+                <h5 className="text-xs font-bold text-emerald-700 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                  ✅ A Liberdade do Método PAUSA:
+                </h5>
+                <p className="text-xs text-emerald-900 leading-relaxed">
+                  {SIMULATOR_DATA[activeSimTab].pausa.consequence}
+                </p>
+              </div>
+            )}
+
+            {simAnswerMode === "none" && !isSimTyping && (
+              <div className="bg-cream/40 border border-soft-border/30 rounded-xl p-4 text-center">
+                <p className="text-xs italic text-slate-text/90">
+                  Selecione acima como gostaria de responder e veja o efeito de cada decisão.
+                </p>
+              </div>
+            )}
+
+            {isSimTyping && (
+              <div className="bg-cream/40 border border-soft-border/30 rounded-xl p-4 text-center animate-pulse">
+                <p className="text-xs text-burnt font-semibold tracking-wide uppercase">
+                  Estruturando resposta firme e sem culpa...
+                </p>
+              </div>
+            )}
+          </div>
+
+          <div className="text-center mt-8">
+            <button
+              onClick={scrollToPlanos}
+              className="w-full max-w-md bg-burnt text-white font-display font-bold text-[13px] min-[390px]:text-sm md:text-base tracking-wider uppercase py-4 px-6 rounded-lg hover:bg-burnt/95 active:scale-[0.98] transition-all duration-150 shadow-md flex items-center justify-center gap-2 cursor-pointer mx-auto shadow-burnt/10"
+            >
+              Quero ter acesso a todas as frases prontas
+            </button>
+          </div>
+
+        </div>
+      </section>
+
       {/* ──────────────────────────────────────────────────────── */}
       <section id="identificacao-dor" className="w-full bg-cream py-16 md:py-24 border-y border-soft-border/50 scroll-mt-6">
         <div className="max-w-3xl mx-auto px-4">
@@ -580,6 +858,136 @@ export default function App() {
                 QUERO APRENDER A ME POSICIONAR
               </button>
             </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* ──────────────────────────────────────────────────────── */}
+      {/* 2.5. COMPARATIVO IMPACTANTE — ANTES VS DEPOIS (EMOÇÃO E CONTRASTE) */}
+      {/* ──────────────────────────────────────────────────────── */}
+      <section className="w-full bg-cream py-14 md:py-20 border-b border-soft-border/50">
+        <div className="max-w-5xl mx-auto px-4">
+          
+          <div className="text-center max-w-2xl mx-auto mb-10 md:mb-14">
+            <span className="text-[10px] min-[390px]:text-[11px] font-bold uppercase tracking-widest text-burnt bg-burnt/10 px-3 py-1 rounded-full">
+              CONSEQUÊNCIAS REAIS
+            </span>
+            <h2 className="text-xl min-[390px]:text-2xl md:text-3.5xl font-display font-extrabold text-navy mt-4 leading-tight">
+              O CICLO DO SIM POR CULPA <br className="hidden md:inline" />
+              VS. A LIBERDADE DO MÉTODO PAUSA
+            </h2>
+            <p className="text-xs min-[390px]:text-sm text-slate-text mt-3">
+              Dizer sim para todo mundo é dizer não para você mesma todos os dias. Compare como é viver sem limites vs. com o Método PAUSA:
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch max-w-4xl mx-auto">
+            
+            {/* O VELHO CAMINHO (PAIN & FRUSTRATION) */}
+            <div className="bg-red-50/45 border border-red-200/80 rounded-2xl p-6 min-[390px]:p-8 shadow-xs flex flex-col justify-between transform hover:scale-[1.01] transition-transform duration-200">
+              <div>
+                <span className="inline-block px-3 py-1 rounded-md bg-red-100 text-red-800 text-[10px] font-bold uppercase tracking-wider mb-5">
+                  ❌ Sem o Método PAUSA
+                </span>
+                <h3 className="text-lg font-display font-bold text-red-950 mb-4">
+                  O Ciclo da Sobrecarga Silenciosa
+                </h3>
+                <ul className="space-y-4">
+                  <li className="flex items-start gap-2.5">
+                    <span className="text-red-500 font-bold text-sm select-none">✕</span>
+                    <div>
+                      <h4 className="text-xs min-[390px]:text-sm font-bold text-red-900 leading-tight">Você diz SIM no impulso</h4>
+                      <p className="text-[11px] min-[390px]:text-xs text-red-800/80 mt-0.5 leading-relaxed">Age por ansiedade social e medo imediato de decepcionar os outros.</p>
+                    </div>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <span className="text-red-500 font-bold text-sm select-none">✕</span>
+                    <div>
+                      <h4 className="text-xs min-[390px]:text-sm font-bold text-red-900 leading-tight">Sua agenda vira propriedade alheia</h4>
+                      <p className="text-[11px] min-[390px]:text-xs text-red-800/80 mt-0.5 leading-relaxed">Você desmarca seus planos de saúde, lazer e família para fazer favores.</p>
+                    </div>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <span className="text-red-500 font-bold text-sm select-none">✕</span>
+                    <div>
+                      <h4 className="text-xs min-[390px]:text-sm font-bold text-red-900 leading-tight">O ressentimento cresce por dentro</h4>
+                      <p className="text-[11px] min-[390px]:text-xs text-red-800/80 mt-0.5 leading-relaxed">Sente raiva secreta e cansaço extremo por não ser respeitada como gostaria.</p>
+                    </div>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <span className="text-red-500 font-bold text-sm select-none">✕</span>
+                    <div>
+                      <h4 className="text-xs min-[390px]:text-sm font-bold text-red-900 leading-tight">Sensação de estar sendo usada</h4>
+                      <p className="text-[11px] min-[390px]:text-xs text-red-800/80 mt-0.5 leading-relaxed">Você se sente sobrecarregada, esgotada mentalmente e sem energia para o que importa.</p>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div className="mt-8 pt-5 border-t border-red-200/50 text-[11px] font-bold text-red-800/90 tracking-wide uppercase italic">
+                Resultado: Ansiedade, exaustão e perda de controle.
+              </div>
+            </div>
+
+            {/* O NOVO CAMINHO (FREEDOM & RELIEF) */}
+            <div className="bg-emerald-50/45 border-2 border-emerald-500/30 rounded-2xl p-6 min-[390px]:p-8 shadow-sm flex flex-col justify-between relative transform hover:scale-[1.01] transition-transform duration-200">
+              
+              <div className="absolute top-4 right-4 bg-emerald-600 text-white text-[9px] font-bold px-2.5 py-0.5 rounded uppercase tracking-wider animate-pulse">
+                Recomendado
+              </div>
+
+              <div>
+                <span className="inline-block px-3 py-1 rounded-md bg-emerald-100 text-emerald-800 text-[10px] font-bold uppercase tracking-wider mb-5">
+                  ✨ Com o Método PAUSA
+                </span>
+                <h3 className="text-lg font-display font-bold text-emerald-950 mb-4">
+                  A Liberdade do Posicionamento Claro
+                </h3>
+                <ul className="space-y-4">
+                  <li className="flex items-start gap-2.5">
+                    <span className="text-emerald-600 font-bold text-sm select-none">✓</span>
+                    <div>
+                      <h4 className="text-xs min-[390px]:text-sm font-bold text-emerald-900 leading-tight">Você PAUSA antes de falar</h4>
+                      <p className="text-[11px] min-[390px]:text-xs text-emerald-850/80 mt-0.5 leading-relaxed">Ganho imediato de tempo emocional para escolher racionalmente.</p>
+                    </div>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <span className="text-emerald-600 font-bold text-sm select-none">✓</span>
+                    <div>
+                      <h4 className="text-xs min-[390px]:text-sm font-bold text-emerald-900 leading-tight">Usa modelos prontos de frases</h4>
+                      <p className="text-[11px] min-[390px]:text-xs text-emerald-850/80 mt-0.5 leading-relaxed">Sem rodeios, sem justificar demais, sem precisar mentir ou ser grossa.</p>
+                    </div>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <span className="text-emerald-600 font-bold text-sm select-none">✓</span>
+                    <div>
+                      <h4 className="text-xs min-[390px]:text-sm font-bold text-emerald-900 leading-tight">Seu tempo e trabalho passam a valer</h4>
+                      <p className="text-[11px] min-[390px]:text-xs text-emerald-850/80 mt-0.5 leading-relaxed">As pessoas passam a respeitar seu posicionamento de forma automática.</p>
+                    </div>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <span className="text-emerald-600 font-bold text-sm select-none">✓</span>
+                    <div>
+                      <h4 className="text-xs min-[390px]:text-sm font-bold text-emerald-900 leading-tight">Autoestima e leveza de volta</h4>
+                      <p className="text-[11px] min-[390px]:text-xs text-emerald-850/80 mt-0.5 leading-relaxed">Sente que é dona absoluta da sua própria rotina, sem carregar o peso dos outros.</p>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div className="mt-8 pt-5 border-t border-emerald-200/50 text-[11px] font-bold text-emerald-800 tracking-wide uppercase italic">
+                Resultado: Leveza, auto-respeito e total controle.
+              </div>
+            </div>
+
+          </div>
+
+          <div className="text-center mt-12">
+            <button
+              onClick={scrollToPlanos}
+              className="w-full max-w-md bg-burnt text-white font-display font-bold text-[13px] min-[390px]:text-sm md:text-base tracking-wider uppercase py-4 px-8 rounded-lg hover:bg-burnt/95 active:scale-[0.98] transition-all duration-150 shadow-md flex items-center justify-center gap-2 cursor-pointer mx-auto shadow-burnt/10"
+            >
+              SIM! QUERO MUDAR MEU CAMINHO HOJE
+            </button>
           </div>
 
         </div>
@@ -1014,7 +1422,7 @@ export default function App() {
             <div className="space-y-4">
               <button
                 onClick={handleBuyPremiumDirectly}
-                className="w-full bg-burnt text-white font-display font-bold text-[13px] min-[390px]:text-sm md:text-base tracking-wider uppercase py-4 px-6 rounded-lg hover:bg-burnt/95 active:scale-[0.98] transition-all duration-150 min-h-[52px] shadow-sm flex items-center justify-center gap-2 cursor-pointer text-center"
+                className="w-full bg-burnt text-white font-display font-bold text-[13px] min-[390px]:text-sm md:text-base tracking-wider uppercase py-4 px-6 rounded-lg hover:bg-burnt/95 active:scale-[0.98] transition-all duration-150 min-h-[52px] shadow-sm flex items-center justify-center gap-2 cursor-pointer text-center animate-pulse-subtle"
               >
                 QUERO O PLANO COMPLETO POR R$29,90
               </button>
