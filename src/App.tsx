@@ -27,9 +27,9 @@ export const config = {
   basicPrice: "R$19,90",
   premiumPrice: "R$29,90",
   premiumUpsellPrice: "R$29,90",
-  basicCheckoutUrl: "https://checkout.transacaoprotegida.com/c35942dc-4391-43d3-894d-753de3f8479e", // Plano 19,90 (Guia Essencial)
-  premiumCheckoutUrl: "https://checkout.transacaoprotegida.com/90cc5cc5-fefb-4490-80ee-766fb52bad5a", // Plano 29,90 (Plano Completo)
-  premiumUpsellCheckoutUrl: "https://checkout.transacaoprotegida.com/f595f38f-70c2-49dc-8ce0-77e09f37a68b", // Plano 29,90 (Upsell)
+  basicCheckoutUrl: "https://pay.lowify.com.br/checkout.php?product_id=wRm0cE", // Plano 19,90 (Guia Essencial)
+  premiumCheckoutUrl: "https://pay.lowify.com.br/checkout.php?product_id=WePDaM", // Plano 29,90 (Plano Completo)
+  premiumUpsellCheckoutUrl: "https://pay.lowify.com.br/checkout.php?product_id=WePDaM", // Plano 29,90 (Upsell)
   guaranteeDays: 7,
   assets: {
     hero: "https://i.ibb.co/Lz9yrNrk/Hero.webp",
